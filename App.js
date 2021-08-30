@@ -32,30 +32,30 @@ export default function App() {
       <MapView style={styles.map} />
       <View style={styles.buttonGrid}>
         <TouchableOpacity
-          style={styles.sosButton}
+          style={styles.button}
           onPress={() => console.log("SOS")}
         >
-          <Text style={styles.sosText}>SOS</Text>
+          <Text style={styles.buttonText}>SOS</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.sosButton}
+          style={styles.button}
           onPress={() => console.log("Alarm/Flash")}
         >
-          <Text style={styles.sosText}>Alarm/Flash</Text>
+          <Text style={styles.buttonText}>Alarm/Flash</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.buttonGrid}>
         <TouchableOpacity
-          style={styles.sosButton}
+          style={styles.button}
           onPress={() => console.log("Voice")}
         >
-          <Text style={styles.sosText}>Voice</Text>
+          <Text style={styles.buttonText}>Voice</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.sosButton}
+          style={styles.button}
           onPress={() => console.log("Virtual Call")}
         >
-          <Text style={styles.sosText}>Virtual Call</Text>
+          <Text style={styles.buttonText}>Virtual Call</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 
   map: {
     width: "100%",
-    height: "62%",
+    height: "65%",
   },
 
   heading: {
@@ -81,24 +81,23 @@ const styles = StyleSheet.create({
   },
 
   headerContainer: {
-    flexDirection: "row",
     backgroundColor: "#4A5C72",
   },
 
-  sosButton: {
+  button: {
     backgroundColor: "#D5E3EC",
     padding: 19,
     borderRadius: 10,
-    width: 100,
-    flex: 1,
+    width: 150,
     shadowColor: "rgba(0, 0, 0, 0.1)",
     shadowOpacity: 0.8,
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 13 },
+    marginHorizontal: 20,
   },
 
-  sosText: {
+  buttonText: {
     color: "#000",
     textAlign: "center",
     textAlignVertical: "center",
@@ -106,7 +105,6 @@ const styles = StyleSheet.create({
 
   buttonGrid: {
     flexDirection: "row",
-    padding: 10,
-    justifyContent: "space-between",
+    marginVertical: 10,
   },
 });
