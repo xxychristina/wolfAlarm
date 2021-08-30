@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
 import { TouchableNativeFeedback } from "react-native";
+import { TouchableHighlight } from "react-native";
 
 // Component
 // import WolfAlarmHeader from "./components/Header/WolfAlarmHeader";
@@ -17,21 +18,22 @@ export default function App() {
   });
   return (
     <SafeAreaView style={styles.container}>
-    {fontLoaded && (
-      <Header
-        centerComponent={{
-          text: "Wolf Alarm",
-          style: styles.heading,
-        }}
-        containerStyle={styles.headerContainer}
-      />
-    )}
+      {fontLoaded && (
+        <Header
+          centerComponent={{
+            text: "Wolf Alarm",
+            style: styles.heading,
+          }}
+          containerStyle={styles.headerContainer}
+        />
+      )}
       <MapView style={styles.map} />
-      <TouchableNativeFeedback onPress={() => console.warn("Hello")}>
-        <View style={styles.sosButton}>
-          <Text>SOS</Text>
-        </View>
-      </TouchableNativeFeedback>
+      <TouchableHighlight
+        style={styles.sosButton}
+        onPress={() => console.warn("Hello")}
+      >
+        <Text style={styles.sosText}>SOS</Text>
+      </TouchableHighlight>
     </SafeAreaView>
   );
 }
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
 
   map: {
     width: "100%",
-    height: "50%",
+    height: "70%",
   },
 
   heading: {
@@ -60,7 +62,19 @@ const styles = StyleSheet.create({
   },
 
   sosButton: {
-    position: "absolute",
-    top: 600,
+    marginRight: 40,
+    marginLeft: 40,
+    marginTop: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: "#68a0cf",
+    borderRadius: 90,
+    borderWidth: 1,
+    borderColor: "#fff",
+  },
+
+  sosText: {
+    color: "#fff",
+    textAlign: "center",
   },
 });
