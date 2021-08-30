@@ -17,16 +17,15 @@ export default function App() {
   });
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      {fontLoaded && (
-        <Header
-          centerComponent={{
-            text: "Wolf Alarm",
-            style: styles.heading,
-          }}
-          containerStyle={styles.headerContainer}
-        />
-      )}
+    {fontLoaded && (
+      <Header
+        centerComponent={{
+          text: "Wolf Alarm",
+          style: styles.heading,
+        }}
+        containerStyle={styles.headerContainer}
+      />
+    )}
       <MapView style={styles.map} />
       <TouchableNativeFeedback onPress={() => console.warn("Hello")}>
         <View style={styles.sosButton}>
@@ -38,18 +37,15 @@ export default function App() {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: "column",
     backgroundColor: "#f8f8f8",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
 
   map: {
-    flexDirection: "row",
     width: "100%",
     height: "50%",
-    position: "absolute",
-    top: 60,
   },
 
   heading: {
@@ -61,8 +57,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     backgroundColor: "#4A5C72",
-    position: "absolute",
-    top: 20,
   },
 
   sosButton: {
