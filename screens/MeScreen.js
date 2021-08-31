@@ -42,7 +42,7 @@ export default function MeScreen() {
       </TouchableOpacity>
       <TouchableOpacity style={styles.help}>
         <MaterialCommunityIcons
-          name="comment-question-outline"
+          name="help-circle-outline"
           color="#4A5C72"
           size={36}
         ></MaterialCommunityIcons>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
 
   emergencyContact: {
-    width: "90%",
+    width: "70%",
     flexDirection: "row",
     alignItems: "center",
     marginTop: 40,
@@ -110,11 +110,11 @@ const styles = StyleSheet.create({
   emergencyContactText: {
     color: "#4A5C72",
     fontSize: 18,
-    marginLeft: 7,
+    marginLeft: 20,
   },
 
   help: {
-    width: "90%",
+    width: "70%",
     flexDirection: "row",
     alignItems: "center",
     marginTop: 20,
@@ -125,6 +125,6 @@ const styles = StyleSheet.create({
   helpText: {
     color: "#4A5C72",
     fontSize: 18,
-    marginLeft: 7,
+    marginLeft: 20,
   },
 });
