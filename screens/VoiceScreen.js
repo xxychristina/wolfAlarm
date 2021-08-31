@@ -145,8 +145,8 @@ const styles = StyleSheet.create({
   list: {
     flexDirection: "column",
     width: "95%",
-    height: "90%",
-    marginBottom: 20
+    height: "85%",
+    marginBottom: 10
     // flex:1
   },
   listItem: {
