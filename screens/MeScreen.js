@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
     borderRadius: 100 / 2,
     backgroundColor: "#C4C4C4",
     marginTop: 140,
-    marginLeft: 50,
+    marginLeft: 35,
   },
 
   detailsGrid: {
     flexDirection: "column",
     alignItems: "center",
-    marginLeft: 18,
+    marginLeft: 23,
   },
 
   name: {
