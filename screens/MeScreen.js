@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
   },
 
   profile: {
-    backgroundColor: "lightblue",
+    backgroundColor: "#D5E3EC",
     width: "100%",
     height: "60%",
     alignItems: "center",
