@@ -5,6 +5,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MeScreen from "../screens/MeScreen";
 
 const Stack = createStackNavigator();
+const header = {
+  headerStyle: { backgroundColor: "#4A5C72" },
+  headerTitleStyle: {
+    color: "white",
+    fontFamily: "Sofia_400Regular",
+  },
+  headerTitleAlign: "center",
+};
 
 export default function MeScreenNavigator() {
   let [fontLoaded] = useFonts({
@@ -15,14 +23,7 @@ export default function MeScreenNavigator() {
       <Stack.Screen
         name="Me"
         component={MeScreen}
-        options={{
-          headerStyle: { backgroundColor: "#4A5C72" },
-          headerTitleStyle: {
-            color: "white",
-            fontFamily: "Sofia_400Regular",
-          },
-          headerTitleAlign: "center",
-        }}
+        options={fontLoaded && header}
       />
     </Stack.Navigator>
   );

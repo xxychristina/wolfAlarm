@@ -10,6 +10,14 @@ import VoiceScreen from "../screens/VoiceScreen";
 import VirtualCallScreen from "../screens/VirtualCallScreen";
 
 const Stack = createStackNavigator();
+const header = {
+  headerStyle: { backgroundColor: "#4A5C72" },
+  headerTitleStyle: {
+    color: "white",
+    fontFamily: "Sofia_400Regular",
+  },
+  headerTitleAlign: "center",
+};
 
 export default function HomeScreenNavigator() {
   let [fontLoaded] = useFonts({
@@ -20,62 +28,27 @@ export default function HomeScreenNavigator() {
       <Stack.Screen
         name="Wolf Alarm"
         component={HomeScreen}
-        options={{
-          headerStyle: { backgroundColor: "#4A5C72" },
-          headerTitleStyle: {
-            color: "white",
-            fontFamily: "Sofia_400Regular",
-          },
-          headerTitleAlign: "center",
-        }}
+        options={fontLoaded && header}
       />
       <Stack.Screen
         name="SOS"
         component={SOSScreen}
-        options={{
-          headerStyle: { backgroundColor: "#4A5C72" },
-          headerTitleStyle: {
-            color: "white",
-            fontFamily: "Sofia_400Regular",
-          },
-          headerTitleAlign: "center",
-        }}
+        options={fontLoaded && header}
       />
       <Stack.Screen
         name="Alarm/Flash"
         component={AlarmFlashScreen}
-        options={{
-          headerStyle: { backgroundColor: "#4A5C72" },
-          headerTitleStyle: {
-            color: "white",
-            fontFamily: "Sofia_400Regular",
-          },
-          headerTitleAlign: "center",
-        }}
+        options={fontLoaded && header}
       />
       <Stack.Screen
         name="Voice"
         component={VoiceScreen}
-        options={{
-          headerStyle: { backgroundColor: "#4A5C72" },
-          headerTitleStyle: {
-            color: "white",
-            fontFamily: "Sofia_400Regular",
-          },
-          headerTitleAlign: "center",
-        }}
+        options={fontLoaded && header}
       />
       <Stack.Screen
         name="VirtualCall"
         component={VirtualCallScreen}
-        options={{
-          headerStyle: { backgroundColor: "#4A5C72" },
-          headerTitleStyle: {
-            color: "white",
-            fontFamily: "Sofia_400Regular",
-          },
-          headerTitleAlign: "center",
-        }}
+        options={fontLoaded && header}
       />
     </Stack.Navigator>
   );
