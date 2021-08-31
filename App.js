@@ -9,6 +9,8 @@ import SOSScreen from "./screens/SOSScreen";
 import AlarmFlashScreen from "./screens/AlarmFlashScreen";
 import VoiceScreen from "./screens/VoiceScreen";
 import VirtualCallScreen from "./screens/VirtualCallScreen";
+import EContact from "./screens/EContact";
+import Help from "./screens/Help";
 
 // Navigators
 import HomeTabNavigator from "./navigators/HomeTabNavigator";
@@ -67,6 +69,16 @@ export default function App() {
         <Stack.Screen
           name="VirtualCall"
           component={VirtualCallScreen}
+          options={fontLoaded && header}
+        />        
+        <Stack.Screen
+          name="Emergency Contact"
+          component={EContact}
+          options={fontLoaded && header}
+        />
+        <Stack.Screen
+          name="Help"
+          component={Help}
           options={fontLoaded && header}
         />
       </Stack.Navigator>

@@ -3,12 +3,22 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function MeScreen() {
+export default function MeScreen({ navigation }) {
+  const EChandler = () => {
+    navigation.navigate("Emergency Contact")
+  }
+
+  const HelpHandler = () => {
+    navigation.navigate("Help")
+  }
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
@@ -32,21 +42,41 @@ export default function MeScreen() {
         </TouchableOpacity>
       </View>
       {/* TODO: add onPress function  */}
-      <TouchableOpacity style={styles.emergencyContact}>
+      <TouchableOpacity style={styles.emergencyContact} onPress={EChandler}>
+        <View style={{flexDirection: "row", alignItems: "center"}}>
+          <MaterialCommunityIcons
+            name="cellphone-iphone"
+            color="#4A5C72"
+            size={36}
+          ></MaterialCommunityIcons>
+          <Text 
+            style={styles.emergencyContactText}
+          >Emergency Contact</Text>
+        </View>
         <MaterialCommunityIcons
-          name="cellphone-iphone"
+          name="chevron-right"
           color="#4A5C72"
-          size={36}
+          size={30}
+          style={{marginRight: 15}}
         ></MaterialCommunityIcons>
-        <Text style={styles.emergencyContactText}>Emergency Contact</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.help}>
+      <TouchableOpacity style={styles.emergencyContact} onPress={HelpHandler}>
+        <View style={{flexDirection: "row", alignItems: "center"}}>
+          <MaterialCommunityIcons
+            name="help-circle-outline"
+            color="#4A5C72"
+            size={36}
+          ></MaterialCommunityIcons>
+          <Text 
+            style={styles.helpContactText}
+          >Help</Text>
+        </View>
         <MaterialCommunityIcons
-          name="help-circle-outline"
+          name="chevron-right"
           color="#4A5C72"
-          size={36}
+          size={30}
+          style={{marginRight: 15}}
         ></MaterialCommunityIcons>
-        <Text style={styles.helpText}>Help</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -60,7 +90,7 @@ const styles = StyleSheet.create({
   },
 
   profile: {
-    backgroundColor: "#D5E3EC",
+    backgroundColor: "lightblue",
     width: "100%",
     height: "60%",
     alignItems: "center",
@@ -73,13 +103,13 @@ const styles = StyleSheet.create({
     borderRadius: 100 / 2,
     backgroundColor: "#C4C4C4",
     marginTop: 140,
-    marginLeft: 50,
+    marginLeft: 35,
   },
 
   detailsGrid: {
     flexDirection: "column",
     alignItems: "center",
-    marginLeft: 18,
+    marginLeft: 23,
   },
 
   name: {
@@ -99,8 +129,9 @@ const styles = StyleSheet.create({
   },
 
   emergencyContact: {
-    width: "70%",
+    width: "90%",
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     marginTop: 40,
     borderBottomColor: "#D2D2D2",
@@ -110,21 +141,26 @@ const styles = StyleSheet.create({
   emergencyContactText: {
     color: "#4A5C72",
     fontSize: 18,
-    marginLeft: 20,
+    marginLeft: 7,
+  },
+  helpContactText: {
+    color: "#4A5C72",
+    fontSize: 18,
+    marginLeft: 9,
   },
 
-  help: {
-    width: "70%",
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    borderBottomColor: "#D2D2D2",
-    borderBottomWidth: 1,
-  },
+  // help: {
+  //   width: "90%",
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   marginTop: 20,
+  //   borderBottomColor: "#D2D2D2",
+  //   borderBottomWidth: 1,
+  // },
 
   helpText: {
     color: "#4A5C72",
     fontSize: 18,
-    marginLeft: 20,
+    marginLeft: 7,
   },
 });
