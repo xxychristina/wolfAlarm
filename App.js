@@ -1,13 +1,33 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
+
+// Screens
+import HomeScreen from "./screens/HomeScreen";
+import SOSScreen from "./screens/SOSScreen";
+import AlarmFlashScreen from "./screens/AlarmFlashScreen";
+import VoiceScreen from "./screens/VoiceScreen";
+import VirtualCallScreen from "./screens/VirtualCallScreen";
 
 // Navigators
 import HomeScreenNavigator from "./navigators/HomeScreenNavigator";
 import MeScreenNavigator from "./navigators/MeScreenNavigator";
+import HomeTabNavigator from "./navigators/HomeTabNavigator";
 
-const Tab = createBottomTabNavigator();
+// const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
+const Stack = createStackNavigator();
+const header = {
+  headerStyle: { backgroundColor: "#4A5C72" },
+  headerTitleStyle: {
+    color: "white",
+    fontFamily: "Sofia_400Regular",
+  },
+  headerTitleAlign: "center",
+};
 
 const config = {
   animation: "spring",
@@ -23,49 +43,38 @@ const config = {
 
 // View -> UIView
 export default function App() {
+  let [fontLoaded] = useFonts({
+    Sofia_400Regular,
+  });
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          gestureEnabled: true,
-          gestureDirection: "horizontal",
-          transitionSpec: {
-            open: config,
-            close: config,
-          },
-          showIcon: true,
-        }}
-      >
-        <Tab.Screen
-          name="HomeScreenNavigator"
-          component={HomeScreenNavigator}
-          options={{
-            title: "Home",
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons
-                name="home"
-                color={color}
-                size={26}
-              ></MaterialCommunityIcons>
-            ),
-          }}
-        ></Tab.Screen>
-        <Tab.Screen
-          name="MeScreenNavigator"
-          component={MeScreenNavigator}
-          options={{
-            title: "Me",
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons
-                name="account"
-                color={color}
-                size={26}
-              ></MaterialCommunityIcons>
-            ),
-          }}
-        ></Tab.Screen>
-      </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Wolf Alarm"
+          component={HomeTabNavigator}
+          options={fontLoaded && header}
+        />
+        <Stack.Screen
+          name="SOS"
+          component={SOSScreen}
+          options={fontLoaded && header}
+        />
+        <Stack.Screen
+          name="Alarm/Flash"
+          component={AlarmFlashScreen}
+          options={fontLoaded && header}
+        />
+        <Stack.Screen
+          name="Voice"
+          component={VoiceScreen}
+          options={fontLoaded && header}
+        />
+        <Stack.Screen
+          name="VirtualCall"
+          component={VirtualCallScreen}
+          options={fontLoaded && header}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
