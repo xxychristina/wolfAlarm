@@ -1,16 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Header } from "react-native-elements/dist/header/Header";
-import { SafeAreaView } from "react-native";
-import MapView from "react-native-maps";
 import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
-import { TouchableNativeFeedback } from "react-native";
-import { TouchableHighlight } from "react-native";
-import { TouchableOpacity } from "react-native";
+import { NavigationContainer, StackActions } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
-// Component
-// import WolfAlarmHeader from "./components/Header/WolfAlarmHeader";
+// Screens
+import HomeScreen from "./screens/HomeScreen";
+import SOSScreen from "./screens/SOSScreen";
+
+const Stack = createStackNavigator();
 
 // View -> UIView
 export default function App() {
@@ -18,93 +15,22 @@ export default function App() {
     Sofia_400Regular,
   });
   return (
-    <SafeAreaView style={styles.container}>
-      {fontLoaded && (
-        <Header
-          centerComponent={{
-            text: "Wolf Alarm",
-            style: styles.heading,
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Wolf Alarm"
+          component={HomeScreen}
+          options={{
+            headerStyle: { backgroundColor: "#4A5C72" },
+            headerTitleStyle: {
+              color: "white",
+              fontFamily: "Sofia_400Regular",
+            },
+            headerTitleAlign: "center",
           }}
-          containerStyle={styles.headerContainer}
         />
-      )}
-
-      <MapView style={styles.map} />
-      <View style={styles.buttonGrid}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("SOS")}
-        >
-          <Text style={styles.buttonText}>SOS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("Alarm/Flash")}
-        >
-          <Text style={styles.buttonText}>Alarm/Flash</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonGrid}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("Voice")}
-        >
-          <Text style={styles.buttonText}>Voice</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("Virtual Call")}
-        >
-          <Text style={styles.buttonText}>Virtual Call</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        <Stack.Screen name="SOS" component={SOSScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    backgroundColor: "#f8f8f8",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-
-  map: {
-    width: "100%",
-    height: "65%",
-  },
-
-  heading: {
-    color: "#fff",
-    fontFamily: "Sofia_400Regular",
-    fontSize: 20,
-  },
-
-  headerContainer: {
-    backgroundColor: "#4A5C72",
-  },
-
-  button: {
-    backgroundColor: "#D5E3EC",
-    padding: 19,
-    borderRadius: 10,
-    width: 150,
-    shadowColor: "rgba(0, 0, 0, 0.1)",
-    shadowOpacity: 0.8,
-    elevation: 6,
-    shadowRadius: 15,
-    shadowOffset: { width: 1, height: 13 },
-    marginHorizontal: 20,
-  },
-
-  buttonText: {
-    color: "#000",
-    textAlign: "center",
-    textAlignVertical: "center",
-  },
-
-  buttonGrid: {
-    flexDirection: "row",
-    marginVertical: 10,
-  },
-});
