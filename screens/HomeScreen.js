@@ -3,10 +3,23 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MeScreen from "./MeScreen";
+
+const Tab = createBottomTabNavigator();
 
 export default function HomeScreen({ navigation }) {
   const SOSPressHandler = () => {
     navigation.navigate("SOS");
+  };
+  const AFPressHandler = () => {
+    navigation.navigate("Alarm/Flash");
+  };
+  const VoicePressHandler = () => {
+    navigation.navigate("Voice");
+  };
+  const VirtualCallPressHandler = () => {
+    navigation.navigate("VirtualCall");
   };
 
   return (
@@ -16,27 +29,33 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={SOSPressHandler}>
           <Text style={styles.buttonText}>SOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("Alarm/Flash")}
-        >
+        <TouchableOpacity style={styles.button} onPress={AFPressHandler}>
           <Text style={styles.buttonText}>Alarm/Flash</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.buttonGrid}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log("Voice")}
-        >
+        <TouchableOpacity style={styles.button} onPress={VoicePressHandler}>
           <Text style={styles.buttonText}>Voice</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => console.log("Virtual Call")}
+          onPress={VirtualCallPressHandler}
         >
           <Text style={styles.buttonText}>Virtual Call</Text>
         </TouchableOpacity>
       </View>
+      {/* <View style={styles.footerGrid}>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text style={styles.buttonText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text style={styles.buttonText}>Me</Text>
+        </TouchableOpacity>
+      </View> */}
+      {/* <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Me" component={MeScreen} />
+      </Tab.Navigator> */}
     </SafeAreaView>
   );
 }
@@ -51,17 +70,7 @@ const styles = StyleSheet.create({
 
   map: {
     width: "100%",
-    height: "68%",
-  },
-
-  heading: {
-    color: "#fff",
-    fontFamily: "Sofia_400Regular",
-    fontSize: 20,
-  },
-
-  headerContainer: {
-    backgroundColor: "#4A5C72",
+    height: "75%",
   },
 
   button: {
@@ -86,5 +95,14 @@ const styles = StyleSheet.create({
   buttonGrid: {
     flexDirection: "row",
     marginVertical: 10,
+  },
+
+  footerGrid: {
+    flexDirection: "row",
+  },
+
+  footerButton: {
+    flex: 0.5,
+    backgroundColor: "yellow",
   },
 });
