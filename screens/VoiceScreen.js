@@ -81,9 +81,9 @@ export default function VoiceScreen() {
       <View style={styles.dot}>
         <Text style={{textAlign: "center"}}>{index}. </Text>
       </View>
-      <View style={styles.voiceButton}>
+      <TouchableOpacity style={styles.voiceButton}>
         <Text style={styles.title}>{title}</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 
@@ -91,7 +91,7 @@ export default function VoiceScreen() {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity>
         <MaterialCommunityIcons
-          style={{alignSelf: "flex-end", marginRight: "2%", marginTop: 10, position:"relative"}}
+          style={{alignSelf: "flex-end", marginRight: "3%", marginTop: 15, position:"relative"}}
           name="circle-edit-outline"
           size={26}  
         >
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "95%",
     height: "90%",
+    marginBottom: 20
     // flex:1
   },
   listItem: {
