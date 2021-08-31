@@ -3,10 +3,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MeScreen from "./MeScreen";
-
-const Tab = createBottomTabNavigator();
 
 export default function HomeScreen({ navigation }) {
   const SOSPressHandler = () => {
@@ -44,18 +40,6 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.buttonText}>Virtual Call</Text>
         </TouchableOpacity>
       </View>
-      {/* <View style={styles.footerGrid}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.buttonText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.buttonText}>Me</Text>
-        </TouchableOpacity>
-      </View> */}
-      {/* <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Me" component={MeScreen} />
-      </Tab.Navigator> */}
     </SafeAreaView>
   );
 }
@@ -95,14 +79,5 @@ const styles = StyleSheet.create({
   buttonGrid: {
     flexDirection: "row",
     marginVertical: 10,
-  },
-
-  footerGrid: {
-    flexDirection: "row",
-  },
-
-  footerButton: {
-    flex: 0.5,
-    backgroundColor: "yellow",
   },
 });
