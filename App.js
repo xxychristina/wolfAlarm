@@ -15,7 +15,6 @@ import Help from "./screens/Help";
 // Navigators
 import HomeTabNavigator from "./navigators/HomeTabNavigator";
 
-// const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const header = {
   headerStyle: { backgroundColor: "#4A5C72" },
@@ -70,7 +69,7 @@ export default function App() {
           name="VirtualCall"
           component={VirtualCallScreen}
           options={fontLoaded && header}
-        />        
+        />
         <Stack.Screen
           name="Emergency Contact"
           component={EContact}
