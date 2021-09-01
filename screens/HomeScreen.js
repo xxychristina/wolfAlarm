@@ -3,13 +3,39 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
+import Torch from "react-native-torch";
+import { useState } from "react";
 
 export default function HomeScreen({ navigation }) {
+  var flashOn = false;
+  var torchState = true;
+  var interval;
+
   const SOSPressHandler = () => {
     navigation.navigate("SOS");
   };
   const AFPressHandler = () => {
-    navigation.navigate("Alarm/Flash");
+    if (flashOn) {
+      flashOn = false;
+      if (interval != undefined) {
+        Torch.switchState(flashOn);
+        clearInterval(interval);
+        interval = undefined;
+      }
+    } else {
+      flashOn = true;
+      interval = setInterval(() => {
+        if (torchState) {
+          console.log("on");
+          Torch.switchState(torchState);
+          torchState = false;
+        } else {
+          console.log("off");
+          Torch.switchState(torchState);
+          torchState = true;
+        }
+      }, 1000);
+    }
   };
   const VoicePressHandler = () => {
     navigation.navigate("Voice");

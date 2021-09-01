@@ -17,6 +17,7 @@ export default function EmergencyContact() {
 
   const EditPressHandler = () => {
     setIsEditing(true);
+    // nameInputRef.current.select();
     nameInputRef.current.focus();
   };
 
@@ -27,7 +28,7 @@ export default function EmergencyContact() {
       <TextInput
         value={name}
         onChangeText={(value) => setName(value)}
-        autoFocus
+        onBlur={() => setIsEditing(false)}
         onSubmitEditing={() => setIsEditing(false)}
         style={styles.emergencyContactName}
         editable={isEditing}
@@ -36,7 +37,7 @@ export default function EmergencyContact() {
       <TextInput
         value={number}
         onChangeText={(value) => setNumber(value)}
-        autoFocus
+        onBlur={() => setIsEditing(false)}
         onSubmitEditing={() => setIsEditing(false)}
         style={styles.emergencyContactNumber}
         editable={isEditing}
