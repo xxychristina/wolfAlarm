@@ -1,18 +1,51 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  TextInput,
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function EmergencyContact() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [number, setNumber] = useState("+6104111111");
+  const [name, setName] = useState("Tony");
+  const numberInputRef = useRef();
+  const nameInputRef = useRef();
+
+  const EditPressHandler = () => {
+    setIsEditing(true);
+    nameInputRef.current.focus();
+  };
+
   return (
     <View style={styles.emergencyContact}>
       <View style={styles.profilePicture}></View>
-      <Text style={styles.emergencyContactName}>Tony</Text>
-      <Text style={styles.emergencyContactNumber}>+6104111111</Text>
+      {/* <Text style={styles.emergencyContactName}>Tony</Text> */}
+      <TextInput
+        value={name}
+        onChangeText={(value) => setName(value)}
+        autoFocus
+        onSubmitEditing={() => setIsEditing(false)}
+        style={styles.emergencyContactName}
+        editable={isEditing}
+        ref={nameInputRef}
+      />
+      <TextInput
+        value={number}
+        onChangeText={(value) => setNumber(value)}
+        autoFocus
+        onSubmitEditing={() => setIsEditing(false)}
+        style={styles.emergencyContactNumber}
+        editable={isEditing}
+        // ref={numberInputRef}
+      />
+      {/* <Text style={styles.emergencyContactNumber}>+6104111111</Text> */}
       <TouchableOpacity
         // TODO: add function
-        onPress={() => {
-          console.log("Pressed");
-        }}
+        onPress={EditPressHandler}
         style={styles.editButton}
       >
         <MaterialCommunityIcons
