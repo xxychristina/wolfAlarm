@@ -8,12 +8,15 @@ import {
   View,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { AuthContext } from "../components/Context";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
   const [number, setNumber] = useState("+6104111111");
   const [name, setName] = useState("MAKABAKA");
   const nameInputRef = useRef(null);
+
+  const { signOut } = React.useContext(AuthContext);
 
   const EditPressHandler = () => {
     setIsEditing(true);
@@ -91,6 +94,27 @@ export default function MeScreen({ navigation }) {
             size={36}
           ></MaterialCommunityIcons>
           <Text style={styles.helpContactText}>Help</Text>
+        </View>
+        <MaterialCommunityIcons
+          name="chevron-right"
+          color="#4A5C72"
+          size={30}
+          style={{ marginRight: 15 }}
+        ></MaterialCommunityIcons>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.emergencyContact}
+        onPress={() => {
+          signOut();
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <MaterialCommunityIcons
+            name="help-circle-outline"
+            color="#4A5C72"
+            size={36}
+          ></MaterialCommunityIcons>
+          <Text style={styles.helpContactText}>Sign Out</Text>
         </View>
         <MaterialCommunityIcons
           name="chevron-right"
