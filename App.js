@@ -3,7 +3,8 @@ import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-
+import { TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 // Screens
 import SOSScreen from "./screens/SOSScreen";
 import AlarmFlashScreen from "./screens/AlarmFlashScreen";
@@ -25,6 +26,22 @@ const header = {
   },
   headerTitleAlign: "center",
 };
+const inviteButton = {
+  headerStyle: { backgroundColor: "#4A5C72" },
+  headerTitleStyle: {
+    color: "white",
+    fontFamily: "Sofia_400Regular",
+  },
+  headerTitleAlign: "center",
+  headerRight: ()=>(
+    <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
+    <MaterialCommunityIcons
+      size={26}
+      name="account-multiple-plus-outline"
+    ></MaterialCommunityIcons>
+  </TouchableOpacity>
+  )
+}
 
 // View -> UIView
 export default function App() {
@@ -74,7 +91,7 @@ export default function App() {
         <Stack.Screen
           name="Emergency Contact"
           component={EContact}
-          options={fontLoaded && header}
+          options={fontLoaded && inviteButton}
         />
         <Stack.Screen
           name="Help"
