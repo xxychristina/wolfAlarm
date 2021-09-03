@@ -49,6 +49,23 @@ export default function App() {
     Sofia_400Regular,
   });
 
+  const inviteButton = {
+    headerStyle: { backgroundColor: "#4A5C72" },
+    headerTitleStyle: {
+      color: "white",
+      fontFamily: "Sofia_400Regular",
+    },
+    headerTitleAlign: "center",
+    headerRight: ()=>(
+      <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
+      <MaterialCommunityIcons
+        size={26}
+        name="account-multiple-plus-outline"
+      ></MaterialCommunityIcons>
+    </TouchableOpacity>
+    )
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
