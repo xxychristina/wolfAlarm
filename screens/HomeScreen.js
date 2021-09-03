@@ -16,12 +16,37 @@ const options = {
 };
 
 export default function HomeScreen({ navigation }) {
+  const [phoneNumber, setPhoneNumber] = React.useState(null);
+  var flashOn = false;
+  // var torchState = true;
+  var interval;
+
   const SOSPressHandler = () => {
     navigation.navigate("SOS");
   };
-  const AFPressHandler = () => {
-    navigation.navigate("Alarm/Flash");
-  };
+  // const AFPressHandler = () => {
+  //   if (flashOn) {
+  //     flashOn = false;
+  //     if (interval != undefined) {
+  //       Torch.switchState(flashOn);
+  //       clearInterval(interval);
+  //       interval = undefined;
+  //     }
+  //   } else {
+  //     flashOn = true;
+  //     interval = setInterval(() => {
+  //       if (torchState) {
+  //         console.log("on");
+  //         Torch.switchState(torchState);
+  //         torchState = false;
+  //       } else {
+  //         console.log("off");
+  //         Torch.switchState(torchState);
+  //         torchState = true;
+  //       }
+  //     }, 1000);
+  //   }
+  // };
   const VoicePressHandler = () => {
     navigation.navigate("Voice");
   };
