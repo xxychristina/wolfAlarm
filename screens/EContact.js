@@ -1,27 +1,33 @@
-import React from 'react';
-import { SafeAreaView, Text, StyleSheet, FlatList, TouchableOpacity, View } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import React from "react";
+import {
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function EContact({ navigation }) {
-
   const DATA = [
     {
-      id:1,
-      name: 'Tony',
-      phone: '+610452230832'
+      id: 1,
+      name: "Tony",
+      phone: "+610452230832",
     },
     {
-      id:2,
-      name: 'Tony',
-      phone: '+610452230832'
+      id: 2,
+      name: "Tony",
+      phone: "+610452230832",
     },
     {
-      id:3,
-      name: 'Tony',
-      phone: '+610452230832'
-    }
-  ]
-  const Item = ({id, name, phone}) => (
+      id: 3,
+      name: "Tony",
+      phone: "+610452230832",
+    },
+  ];
+  const Item = ({ id, name, phone }) => (
     <View style={styles.card}>
       <View style={styles.avatar}></View>
       <Text>{name}</Text>
@@ -32,14 +38,10 @@ export default function EContact({ navigation }) {
           size={26}
         ></MaterialCommunityIcons>
       </TouchableOpacity>
-      
     </View>
-  )
+  );
 
-
-
-
-  return(
+  return (
     <SafeAreaView>
       {/* <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
         <MaterialCommunityIcons
@@ -50,8 +52,10 @@ export default function EContact({ navigation }) {
       <View style={styles.list}>
         <FlatList
           data={DATA}
-          renderItem={({ item }) => <Item id={item.id} name={item.name} phone={item.phone}  />}
-          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <Item id={item.id} name={item.name} phone={item.phone} />
+          )}
+          keyExtractor={(item) => item.id.toString()}
         />
       </View>
     </SafeAreaView>
@@ -61,24 +65,24 @@ export default function EContact({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    flex: 1
+    flex: 1,
   },
   list: {
-    marginTop: 5
+    marginTop: 5,
   },
   card: {
     flexDirection: "row",
     justifyContent: "space-around",
     borderBottomWidth: 1,
-    borderBottomColor: "grey", 
+    borderBottomColor: "grey",
     marginVertical: 20,
     paddingVertical: 10,
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "grey"
-  }
-})
+    backgroundColor: "grey",
+  },
+});
