@@ -26,6 +26,7 @@ const header = {
   },
   headerTitleAlign: "center",
 };
+
 const inviteButton = {
   headerStyle: { backgroundColor: "#4A5C72" },
   headerTitleStyle: {
@@ -34,7 +35,9 @@ const inviteButton = {
   },
   headerTitleAlign: "center",
   headerRight: ()=>(
-    <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
+    <TouchableOpacity 
+      style={{alignSelf: "flex-end", paddingRight: 20}}
+    >
     <MaterialCommunityIcons
       size={26}
       name="account-multiple-plus-outline"
@@ -108,7 +111,7 @@ export default function App() {
         <Stack.Screen
           name="Emergency Contact"
           component={EContact}
-          options={fontLoaded && inviteButton}
+          options={fontLoaded && header}
         />
         <Stack.Screen
           name="Help"
