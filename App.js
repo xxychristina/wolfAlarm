@@ -1,13 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, ToolbarAndroidBase, View, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { TouchableOpacity } from "react-native";
 import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // Screens
-import SOSScreen from "./screens/SOSScreen";
-import AlarmFlashScreen from "./screens/AlarmFlashScreen";
 import VoiceScreen from "./screens/VoiceScreen";
 import VirtualCallScreen from "./screens/VirtualCallScreen";
 import EContact from "./screens/EContact";
@@ -26,25 +24,13 @@ const header = {
   },
   headerTitleAlign: "center",
 };
-const inviteButton = {
-  headerStyle: { backgroundColor: "#4A5C72" },
-  headerTitleStyle: {
-    color: "white",
-    fontFamily: "Sofia_400Regular",
-  },
-  headerTitleAlign: "center",
-  headerRight: ()=>(
-    <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
-    <MaterialCommunityIcons
-      size={26}
-      name="account-multiple-plus-outline"
-    ></MaterialCommunityIcons>
-  </TouchableOpacity>
-  )
-}
 
 // View -> UIView
 export default function App() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("test@gmail.com");
+  const [password, setPassword] = useState("1234");
+
   let [fontLoaded] = useFonts({
     Sofia_400Regular,
   });
@@ -56,15 +42,15 @@ export default function App() {
       fontFamily: "Sofia_400Regular",
     },
     headerTitleAlign: "center",
-    headerRight: ()=>(
-      <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
-      <MaterialCommunityIcons
-        size={26}
-        name="account-multiple-plus-outline"
-      ></MaterialCommunityIcons>
-    </TouchableOpacity>
-    )
-  }
+    headerRight: () => (
+      <TouchableOpacity style={{ alignSelf: "flex-end", paddingRight: 20 }}>
+        <MaterialCommunityIcons
+          size={26}
+          name="account-multiple-plus-outline"
+        ></MaterialCommunityIcons>
+      </TouchableOpacity>
+    ),
+  };
 
   return (
     <NavigationContainer>
@@ -79,21 +65,11 @@ export default function App() {
               case "HomeTab": {
                 return header;
               }
-              case "AccountTab": {
+              case "MeTab": {
                 return { headerShown: false };
               }
             }
           }}
-        />
-        <Stack.Screen
-          name="SOS"
-          component={SOSScreen}
-          options={fontLoaded && header}
-        />
-        <Stack.Screen
-          name="Alarm/Flash"
-          component={AlarmFlashScreen}
-          options={fontLoaded && header}
         />
         <Stack.Screen
           name="Voice"
@@ -104,7 +80,7 @@ export default function App() {
           name="VirtualCall"
           component={VirtualCallScreen}
           options={fontLoaded && header}
-        />        
+        />
         <Stack.Screen
           name="Emergency Contact"
           component={EContact}

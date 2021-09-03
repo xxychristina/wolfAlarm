@@ -36,7 +36,7 @@ export default function HomeTabNavigator({ navigation }) {
         }}
       ></Tab.Screen>
       <Tab.Screen
-        name="AccountTab"
+        name="MeTab"
         component={MeScreen}
         options={{
           title: "Me",

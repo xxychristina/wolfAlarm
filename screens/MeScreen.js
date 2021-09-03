@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Input } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("MAKABAKA");
+  const [prevName, setPrevName] = useState(name);
   const [phone, setPhone] = useState("+6104111111");
+  const [prevPhone, setPrevPhone] = useState(phone);
   const [avatar, setAvatar] = useState(null);
 
   // TODO: retrieve data from firebase
@@ -25,13 +28,27 @@ export default function MeScreen({ navigation }) {
     navigation.navigate("Help");
   };
 
+  const SignOutHandler = () => {
+    // TODO: signout
+  };
+
   const EditHandler = () => {
     if (!isEditing) {
       setIsEditing(true);
     }
   };
 
-  // TODO: set the value in the database when change, and profile picture
+  const SaveHandler = () => {
+    // TODO: upload data to database
+    setIsEditing(false);
+  };
+
+  const CancelHandler = () => {
+    setName(prevName);
+    setPhone(prevPhone);
+    setIsEditing(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
@@ -39,36 +56,54 @@ export default function MeScreen({ navigation }) {
         <View style={styles.detailsGrid}>
           <TextInput
             editable={isEditing}
+            // style={isEditing ? styles.editing : styles.name}
             style={styles.name}
             onChangeText={(name) => {
               setName(name);
-            }}
-            onBlur={() => {
-              setIsEditing(false);
             }}
           >
             {name}
           </TextInput>
           <TextInput
             editable={isEditing}
+            // style={isEditing ? styles.editing : styles.phone}
             style={styles.phone}
             onChangeText={(phone) => {
               setPhone(phone);
-            }}
-            onBlur={() => {
-              setIsEditing(false);
             }}
           >
             {phone}
           </TextInput>
         </View>
-        <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
-          <MaterialCommunityIcons
-            name="circle-edit-outline"
-            color="#4A5C72"
-            size={26}
-          ></MaterialCommunityIcons>
-        </TouchableOpacity>
+        {isEditing ? (
+          <View style={styles.buttonGird}>
+            <TouchableOpacity onPress={SaveHandler}>
+              <MaterialCommunityIcons
+                name="content-save-outline"
+                color="#4A5C72"
+                size={26}
+              ></MaterialCommunityIcons>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={CancelHandler}
+              style={styles.cancelButton}
+            >
+              <MaterialCommunityIcons
+                name="cancel"
+                color="#4A5C72"
+                size={26}
+              ></MaterialCommunityIcons>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
+            <MaterialCommunityIcons
+              name="circle-edit-outline"
+              color="#4A5C72"
+              size={26}
+            ></MaterialCommunityIcons>
+          </TouchableOpacity>
+        )}
       </View>
       <TouchableOpacity style={styles.navigateTabs} onPress={EChandler}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -94,6 +129,22 @@ export default function MeScreen({ navigation }) {
             size={36}
           ></MaterialCommunityIcons>
           <Text style={styles.helpContactText}>Help</Text>
+        </View>
+        <MaterialCommunityIcons
+          name="chevron-right"
+          color="#4A5C72"
+          size={30}
+          style={{ marginRight: 15 }}
+        ></MaterialCommunityIcons>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.navigateTabs} onPress={SignOutHandler}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <MaterialCommunityIcons
+            name="exit-to-app"
+            color="#4A5C72"
+            size={36}
+          ></MaterialCommunityIcons>
+          <Text style={styles.helpContactText}>Sign Out</Text>
         </View>
         <MaterialCommunityIcons
           name="chevron-right"
@@ -133,13 +184,13 @@ const styles = StyleSheet.create({
   detailsGrid: {
     flexDirection: "column",
     alignItems: "center",
-    marginLeft: 23,
+    marginLeft: 20,
+    marginTop: 140,
   },
 
   name: {
     color: "#000",
     fontSize: 20,
-    marginTop: 140,
   },
 
   phone: {
@@ -150,6 +201,17 @@ const styles = StyleSheet.create({
   editButton: {
     marginTop: 165,
     marginLeft: 20,
+  },
+
+  buttonGird: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 165,
+    marginLeft: 20,
+  },
+
+  cancelButton: {
+    marginLeft: 10,
   },
 
   navigateTabs: {
