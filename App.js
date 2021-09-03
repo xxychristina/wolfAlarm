@@ -1,9 +1,9 @@
 import React from "react";
+import { StyleSheet, Text, ToolbarAndroidBase, View, TouchableOpacity } from "react-native";
 import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 // Screens
 import SOSScreen from "./screens/SOSScreen";
