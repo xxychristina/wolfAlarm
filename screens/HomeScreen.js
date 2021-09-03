@@ -1,52 +1,15 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, ToolbarAndroidBase, View } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
-import Torch from "react-native-torch";
-import RNImmediatePhoneCall from "react-native-immediate-phone-call";
-import AudioRecord from "react-native-audio-record";
-
-const options = {
-  sampleRate: 16000, // default 44100
-  channels: 1, // 1 or 2, default 1
-  bitsPerSample: 16, // 8 or 16, default 16
-  audioSource: 6, // android only (see below)
-  wavFile: "test.wav", // default 'audio.wav'
-};
 
 export default function HomeScreen({ navigation }) {
-  const [phoneNumber, setPhoneNumber] = useState(null);
-  var flashOn = false;
-  var torchState = true;
-  var interval;
-
   const SOSPressHandler = () => {
-    // TODO: need testing
-    // RNImmediatePhoneCall.immediatePhoneCall(phoneNumber);
+    navigation.navigate("SOS");
   };
   const AFPressHandler = () => {
-    if (flashOn) {
-      flashOn = false;
-      if (interval != undefined) {
-        Torch.switchState(flashOn);
-        clearInterval(interval);
-        interval = undefined;
-      }
-    } else {
-      flashOn = true;
-      interval = setInterval(() => {
-        if (torchState) {
-          console.log("on");
-          Torch.switchState(torchState);
-          torchState = false;
-        } else {
-          console.log("off");
-          Torch.switchState(torchState);
-          torchState = true;
-        }
-      }, 1000);
-    }
+    navigation.navigate("Alarm/Flash");
   };
   const VoicePressHandler = () => {
     navigation.navigate("Voice");
