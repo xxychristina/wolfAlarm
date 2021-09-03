@@ -3,9 +3,9 @@ import { StyleSheet, Text, ToolbarAndroidBase, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
-import Torch from "react-native-torch";
-import RNImmediatePhoneCall from "react-native-immediate-phone-call";
-import AudioRecord from "react-native-audio-record";
+// import Torch from "react-native-torch";
+// import RNImmediatePhoneCall from "react-native-immediate-phone-call";
+// import AudioRecord from "react-native-audio-record";
 
 const options = {
   sampleRate: 16000, // default 44100
@@ -62,7 +62,7 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={SOSPressHandler}>
           <Text style={styles.buttonText}>SOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={AFPressHandler}>
+        <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Alarm/Flash</Text>
         </TouchableOpacity>
       </View>

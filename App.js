@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, ToolbarAndroidBase, View } from "react-native";
+import { StyleSheet, Text, ToolbarAndroidBase, View, TouchableOpacity } from "react-native";
 import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts, Sofia_400Regular } from "@expo-google-fonts/sofia";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 // Screens
 import SOSScreen from "./screens/SOSScreen";
@@ -128,6 +129,23 @@ export default function App() {
     Sofia_400Regular,
   });
 
+  const inviteButton = {
+    headerStyle: { backgroundColor: "#4A5C72" },
+    headerTitleStyle: {
+      color: "white",
+      fontFamily: "Sofia_400Regular",
+    },
+    headerTitleAlign: "center",
+    headerRight: ()=>(
+      <TouchableOpacity style={{alignSelf: "flex-end", paddingRight: 20}}>
+      <MaterialCommunityIcons
+        size={26}
+        name="account-multiple-plus-outline"
+      ></MaterialCommunityIcons>
+    </TouchableOpacity>
+    )
+  }
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
@@ -179,7 +197,7 @@ export default function App() {
           <Stack.Screen
             name="Emergency Contact"
             component={EContact}
-            options={fontLoaded && header}
+            options={fontLoaded && inviteButton}
           />
           <Stack.Screen
             name="Help"
