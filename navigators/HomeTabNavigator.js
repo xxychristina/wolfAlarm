@@ -9,10 +9,7 @@ import MeScreen from "../screens/MeScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
-export default function HomeTabNavigator({ navigation }) {
-  let [fontLoaded] = useFonts({
-    Sofia_400Regular,
-  });
+export default function HomeTabNavigator() {
   return (
     <Tab.Navigator
       activeColor="#4A5C72"

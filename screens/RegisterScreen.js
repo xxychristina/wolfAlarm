@@ -1,20 +1,18 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
 
-export default function Help({ navigation }) {
+export default function RegisterScreen() {
   return (
-    <SafeAreaView>
-      <Text>Help</Text>
+    <SafeAreaView style={styles.container}>
+      <Text>Register</Text>
     </SafeAreaView>
   );
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
   },
-
-  qa: {},
 });
