@@ -16,7 +16,6 @@ import firebase from "firebase";
 
 export class Login extends Component {
   // const [phoneNumber, setPhoneNumber] = useState(null);
-  // const { signIn } = React.useContext(AuthContext);
   // findCoordinates = () => {
   //   navigator.geolocation.getCurrentPosition(
   //     (position) => {
@@ -37,7 +36,6 @@ export class Login extends Component {
 
     this.onLogin = this.onLogin.bind(this);
   }
-
   onLogin() {
     const { phoneNumber } = this.state;
   }
@@ -57,9 +55,9 @@ export class Login extends Component {
             />
           </View>
           <TouchableOpacity
-            // onPress={() => {
-            //   signIn(phoneNumber);
-            // }}
+            onPress={() => {
+              signIn(phoneNumber);
+            }}
             style={styles.loginButton}
           >
             <Text style={{ fontSize: 20 }}>Login</Text>
