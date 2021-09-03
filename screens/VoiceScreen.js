@@ -1,6 +1,8 @@
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Button, FlatList, ScrollView } from "react-native";
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
+
 
 export default function VoiceScreen() {
   const DATA = [
@@ -75,28 +77,71 @@ export default function VoiceScreen() {
       index: 3
     },
   ];
+  const [settingState, setSettingState] = React.useState(false);
+  let checkbox;
+  // if(settingModel){
+  //   checkbox =
+  //   <BouncyCheckbox
+  //     size={25}
+  //     fillColor="red"
+  //     unfillColor="#FFFFFF"
+  //     style={{marginLeft: 4}}
+  //   ></BouncyCheckbox>
+  // }else{
+  //   checkbox = null;
+  // }
 
-  const Item = ({ title, index }) => (
-    <View style={styles.listItem}>
+  let Item = ({ title, index }) => (
+    <View style={settingState ? styles.listItemC : styles.listItem}>
       <View style={styles.dot}>
         <Text style={{textAlign: "center"}}>{index}. </Text>
       </View>
-      <View style={styles.voiceButton}>
+      <TouchableOpacity style={styles.voiceButton}>
         <Text style={styles.title}>{title}</Text>
-      </View>
+      </TouchableOpacity>
+      <BouncyCheckbox
+        size={25}
+        fillColor="#D9AEA8"
+        unfillColor="#FFFFFF"
+        iconStyle={{ borderColor: "#D9AEA8" }}
+        style={settingState ? {display: 'flex', marginLeft: 5} : {display: 'none'}}
+    ></BouncyCheckbox>
     </View>
   );
 
+  const editIcon = 
+  <TouchableOpacity>
+    <MaterialCommunityIcons
+      style={{alignSelf: "flex-end", marginRight: "6%", marginTop: 15, position:"relative"}}
+      name="circle-edit-outline"
+      size={26}
+      onPress={
+        ()=> {setSettingState(!settingState)}
+      }
+    >
+    </MaterialCommunityIcons>
+  </TouchableOpacity>
+
+  const deleteIcon = 
+  <TouchableOpacity>
+    <MaterialCommunityIcons
+      style={{alignSelf: "flex-end", marginRight: "6%", marginTop: 15, position:"relative"}}
+      name="delete-outline"
+      size={26}
+      onPress={
+        ()=> {setSettingState(!settingState)}
+      }
+    >
+    </MaterialCommunityIcons>
+  </TouchableOpacity>
+
+  let Eicon = settingState ? deleteIcon : editIcon;
+
+
+
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity>
-        <MaterialCommunityIcons
-          style={{alignSelf: "flex-end", marginRight: "2%", marginTop: 10, position:"relative"}}
-          name="circle-edit-outline"
-          size={26}  
-        >
-        </MaterialCommunityIcons>
-      </TouchableOpacity>
+      {Eicon}
       <View style={styles.list}>
         <FlatList
           data={DATA}
@@ -145,13 +190,22 @@ const styles = StyleSheet.create({
   list: {
     flexDirection: "column",
     width: "95%",
-    height: "90%",
+    height: "85%",
+    marginBottom: 10,
+    marginLeft: 10,
     // flex:1
   },
   listItem: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: 60
+  },
+  listItemC: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
     width: "100%",
     height: 60
   },
