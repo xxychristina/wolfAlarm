@@ -22,6 +22,21 @@ import { AuthContext } from "./components/Context";
 import { ActivityIndicator } from "react-native-paper";
 import { useEffect } from "react";
 
+import * as firebase from "firebase";
+const firebaseConfig = {
+  apiKey: "AIzaSyAgtcJ6QegU_wgbGP_9tUB7GA39CP-0n0E",
+  authDomain: "wolf-alarm.firebaseapp.com",
+  projectId: "wolf-alarm",
+  storageBucket: "wolf-alarm.appspot.com",
+  messagingSenderId: "329230643226",
+  appId: "1:329230643226:web:c0ee25c14bc21c4559a1a3",
+  measurementId: "G-H19FZ2P52V",
+};
+
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 const Stack = createStackNavigator();
 const header = {
   headerStyle: { backgroundColor: "#4A5C72" },
