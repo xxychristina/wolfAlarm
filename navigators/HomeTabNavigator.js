@@ -92,7 +92,7 @@ export default function HomeTabNavigator() {
         .signOut()
         .then(() => console.log("user sign out"));
     },
-    register: (email, phone, password) => {
+    register: (email, phone, password, name) => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -102,7 +102,7 @@ export default function HomeTabNavigator() {
             .firestore()
             .collection("users")
             .doc(firebase.auth().currentUser.uid)
-            .set({ email, phone });
+            .set({ email, phone, name });
         })
         .catch((error) => {
           console.log(error);

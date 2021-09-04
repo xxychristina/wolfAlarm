@@ -35,8 +35,8 @@ export default function RegisterScreen({ navigation }) {
     navigation.navigate("Login");
   };
 
-  const RegisterHandler = (email, phone, password) => {
-    register(email, phone, password);
+  const RegisterHandler = (email, phone, password, name) => {
+    register(email, phone, password, name);
   };
 
   const ShowPasswordHandler = () => {
@@ -114,18 +114,19 @@ export default function RegisterScreen({ navigation }) {
                 onChangeText={(password) => {
                   setPassword(password);
                 }}
+                secureTextEntry={showPassword}
               />
               <TouchableOpacity onPress={ShowPasswordHandler}>
                 {showPassword ? (
                   <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
+                    name="eye"
+                    color="#4169e1"
                     size={25}
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
+                    name="eye-off"
+                    color="gray"
                     size={25}
                   />
                 )}
@@ -146,18 +147,19 @@ export default function RegisterScreen({ navigation }) {
                 onChangeText={(confirmPassword) => {
                   setConfirmPassword(confirmPassword);
                 }}
+                secureTextEntry={showPassword}
               />
               <TouchableOpacity onPress={ShowPasswordHandler}>
                 {showPassword ? (
                   <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
+                    name="eye"
+                    color="#4169e1"
                     size={25}
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
+                    name="eye-off"
+                    color="gray"
                     size={25}
                   />
                 )}
@@ -169,7 +171,7 @@ export default function RegisterScreen({ navigation }) {
                 onPress={() => {
                   // console.log("This is " + data.email);
                   console.log(email);
-                  RegisterHandler(email, phone, password);
+                  RegisterHandler(email, phone, password, name);
                 }}
               >
                 <Text style={[styles.buttonText, { color: "white" }]}>

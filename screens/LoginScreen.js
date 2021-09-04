@@ -18,7 +18,7 @@ import Welcome from "../assets/Welcome.png";
 
 export default function LoginScreen({ navigation }) {
   const isFocused = useIsFocused();
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
@@ -36,6 +36,7 @@ export default function LoginScreen({ navigation }) {
     if (showPassword) {
       setShowPassword(false);
     } else {
+      console.log("run");
       setShowPassword(true);
     }
   };
@@ -77,18 +78,19 @@ export default function LoginScreen({ navigation }) {
                 onChangeText={(password) => {
                   setPassword(password);
                 }}
+                secureTextEntry={showPassword}
               />
               <TouchableOpacity onPress={ShowPasswordHandler}>
                 {showPassword ? (
                   <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
+                    name="eye"
+                    color="#4169e1"
                     size={25}
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
+                    name="eye-off"
+                    color="gray"
                     size={25}
                   />
                 )}
