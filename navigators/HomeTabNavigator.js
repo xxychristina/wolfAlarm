@@ -24,7 +24,9 @@ import MeScreen from "../screens/MeScreen";
 
 // Components
 import { AuthContext } from "../components/Context";
-import WelcomeScreen from "../screens/WelcomeScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import MeTabNavigator from "./MeTabNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -73,13 +75,12 @@ export default function HomeTabNavigator() {
   const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
 
   const authContext = useMemo(() => ({
-    login: (email) => {
+    login: (email, password) => {
       firebase
         .auth()
-        .signInWithEmailAndPassword(email, "123567")
+        .signInWithEmailAndPassword(email, password)
         .then((result) => {
           console.log(result);
-          dispatch({ type: "LOGIN", email: email, token: "123" });
         })
         .catch((error) => {
           console.log(error);
@@ -90,20 +91,18 @@ export default function HomeTabNavigator() {
         .auth()
         .signOut()
         .then(() => console.log("user sign out"));
-      dispatch({ type: "LOGOUT" });
     },
-    register: (email) => {
+    register: (email, phone, password) => {
       firebase
         .auth()
-        .createUserWithEmailAndPassword(email, "123567")
+        .createUserWithEmailAndPassword(email, password)
         .then((result) => {
           console.log(result);
           firebase
             .firestore()
             .collection("users")
             .doc(firebase.auth().currentUser.uid)
-            .set({ email });
-          dispatch({ type: "REGISTER", email: email, token: "123" });
+            .set({ email, phone });
         })
         .catch((error) => {
           console.log(error);
@@ -161,7 +160,7 @@ export default function HomeTabNavigator() {
             ),
           }}
         ></Tab.Screen>
-        {loginState.email ? (
+        {loggedIn ? (
           <Tab.Screen
             name="MeTab"
             component={MeScreen}
@@ -178,8 +177,8 @@ export default function HomeTabNavigator() {
           ></Tab.Screen>
         ) : (
           <Tab.Screen
-            name="Welcome"
-            component={WelcomeScreen}
+            name="MeTab"
+            component={MeTabNavigator}
             options={{
               title: "Me",
               tabBarIcon: ({ color }) => (
