@@ -25,15 +25,9 @@ export default function RegisterScreen({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [name, setName] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [phone, setPhone] = useState(null);
-
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
-  });
 
   const { register } = useContext(AuthContext);
 
@@ -87,6 +81,21 @@ export default function RegisterScreen({ navigation }) {
                 style={styles.textinput}
                 onChangeText={(phone) => {
                   setPhone(phone);
+                }}
+              />
+            </View>
+            <Text style={[styles.text_footer, { marginTop: 20 }]}>Name</Text>
+            <View style={styles.action}>
+              <MaterialCommunityIcons
+                name="pencil-outline"
+                color="#4A5C72"
+                size={25}
+              />
+              <TextInput
+                placeholder="Your name"
+                style={styles.textinput}
+                onChangeText={(name) => {
+                  setName(name);
                 }}
               />
             </View>
