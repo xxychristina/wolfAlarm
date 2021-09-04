@@ -8,11 +8,11 @@ import {
 } from "react-native";
 
 import { Input, Button } from "react-native-elements";
-import Icon from "react-native-vector-icons/EvilIcons"
+import Icon from "react-native-vector-icons/EvilIcons";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import EmergencyContact from "../components/EmergencyContact";
-import Modal from "react-native-modal"
+import Modal from "react-native-modal";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function EContact({ navigation }) {
@@ -21,51 +21,49 @@ export default function EContact({ navigation }) {
   const toggleInvite = () => {
     setInviteModal(!inviteModal);
     console.log(inviteModal);
-  }
+  };
 
   const DATA = [
     {
-      'id': 1,
-      'name': 'William',
-      'phone': '+61452230632'
+      id: 1,
+      name: "William",
+      phone: "+61452230632",
     },
     {
-      'id': 2,
-      'name': 'Chris',
-      'phone': '+61452230632'
+      id: 2,
+      name: "Chris",
+      phone: "+61452230632",
     },
     {
-      'id': 3,
-      'name': 'Chris',
-      'phone': '+61452230632'
-    }
-  ]
+      id: 3,
+      name: "Chris",
+      phone: "+61452230632",
+    },
+  ];
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: ()=>(
-        <TouchableOpacity 
-          style={{alignSelf: "flex-end", paddingRight: 20}}
+      headerRight: () => (
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end", paddingRight: 20 }}
           onPress={toggleInvite}
         >
-        <MaterialCommunityIcons
-          size={26}
-          name="account-multiple-plus-outline"
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-      )
+          <MaterialCommunityIcons
+            size={26}
+            name="account-multiple-plus-outline"
+          ></MaterialCommunityIcons>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.centerView}>
-        <Modal
-          isVisible={inviteModal}
-        >
+        <Modal isVisible={inviteModal}>
           <View style={styles.modalContainer}>
             <TouchableOpacity
-              style={{alignSelf:"flex-end", margin: 15}}
+              style={{ alignSelf: "flex-end", margin: 15 }}
               onPress={toggleInvite}
             >
               <MaterialCommunityIcons
@@ -75,17 +73,15 @@ export default function EContact({ navigation }) {
             </TouchableOpacity>
             <Input
               placeholder="Email"
-              leftIcon={
-                <Icon
-                  name="envelope"
-                  size={30}
-                ></Icon>
-              }
+              leftIcon={<Icon name="envelope" size={30}></Icon>}
+            ></Input>
+            <TouchableOpacity
+              onPress={() => {
+                alert("send");
+              }}
             >
-            </Input>
-            <TouchableOpacity onPress={() => {alert("send")}}>
               <View style={styles.button}>
-                <Text style={{textAlign: "center"}}>Invite</Text>
+                <Text style={{ textAlign: "center" }}>Invite</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -94,13 +90,14 @@ export default function EContact({ navigation }) {
       <View>
         <FlatList
           data={DATA}
-          renderItem={({item, index}) => <EmergencyContact 
-            name={item.name} 
-            phone={item.phone}
-            id={item.id}></EmergencyContact>
-          }
-        >
-        </FlatList>
+          renderItem={({ item, index }) => (
+            <EmergencyContact
+              name={item.name}
+              phone={item.phone}
+              id={item.id}
+            ></EmergencyContact>
+          )}
+        ></FlatList>
       </View>
     </SafeAreaView>
   );
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingHorizontal: 10,
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   centerText: {
     // textAlign: "center",
