@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
   },
 
   buttonGrid: {
-    flex: 0.25,
     width: "100%",
     alignItems: "center",
     marginTop: 20,
@@ -210,5 +209,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });

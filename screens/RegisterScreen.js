@@ -227,7 +227,6 @@ const styles = StyleSheet.create({
   },
 
   buttonGrid: {
-    flex: 0.25,
     width: "100%",
     alignItems: "center",
     marginTop: 20,
