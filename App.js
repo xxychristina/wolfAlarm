@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TouchableOpacity } from "react-native";
 import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -27,10 +27,6 @@ const header = {
 
 // View -> UIView
 export default function App() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("1234");
-
   let [fontLoaded] = useFonts({
     Sofia_400Regular,
   });
@@ -61,13 +57,10 @@ export default function App() {
           options={({ route }) => {
             const routeName =
               getFocusedRouteNameFromRoute(route) ?? "Wolf Alarm";
-            switch (routeName) {
-              case "HomeTab": {
-                return header;
-              }
-              case "MeTab": {
-                return { headerShown: false };
-              }
+            if (routeName === "HomeTab") {
+              return header;
+            } else {
+              return { headerShown: false };
             }
           }}
         />

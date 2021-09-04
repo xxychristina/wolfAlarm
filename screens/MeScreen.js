@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Input } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { AuthContext } from "../components/Context";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,6 +18,8 @@ export default function MeScreen({ navigation }) {
   const [phone, setPhone] = useState("+6104111111");
   const [prevPhone, setPrevPhone] = useState(phone);
   const [avatar, setAvatar] = useState(null);
+
+  const { logout } = useContext(AuthContext);
 
   // TODO: retrieve data from firebase
 
@@ -30,6 +33,7 @@ export default function MeScreen({ navigation }) {
 
   const SignOutHandler = () => {
     // TODO: signout
+    logout();
   };
 
   const EditHandler = () => {
