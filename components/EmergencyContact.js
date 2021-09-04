@@ -9,10 +9,9 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function EmergencyContact({name, phone, id}) {
-  const EditPressHandler = () => {
-    setIsEditing(true);
-    // nameInputRef.current.select();
-    nameInputRef.current.focus();
+  const deletePressHandler = () => {
+    //TODO: delete popup
+    console.log("delete")
   };
 
   return (
@@ -26,7 +25,7 @@ export default function EmergencyContact({name, phone, id}) {
       >{phone}</Text>
       <TouchableOpacity
         // TODO: add function
-        onPress={EditPressHandler}
+        onPress={deletePressHandler}
         style={styles.editButton}
       >
         <MaterialCommunityIcons
