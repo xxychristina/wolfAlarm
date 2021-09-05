@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
-  KeyboardAvoidingView,
   ScrollView,
   Alert,
 } from "react-native";
@@ -15,7 +14,6 @@ import { AuthContext } from "../components/Context";
 import * as Animatable from "react-native-animatable";
 import { useIsFocused } from "@react-navigation/core";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import firebase from "firebase";
 
 // Background Image
 import Welcome from "../assets/Welcome.png";
@@ -55,7 +53,6 @@ export default function RegisterScreen({ navigation }) {
   return (
     <ImageBackground source={Welcome} style={styles.backgroundImg}>
       <ScrollView
-        // behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
         contentContainerStyle={{
           flexGrow: 1,

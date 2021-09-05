@@ -16,32 +16,18 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // Background Image
 import Welcome from "../assets/Welcome.png";
 
-export default function LoginScreen({ navigation }) {
+export default function ForgotPasswordScreen({ navigation }) {
   const isFocused = useIsFocused();
-  const [showPassword, setShowPassword] = useState(true);
   const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
 
-  const { login } = useContext(AuthContext);
+  const { forgotPassword } = useContext(AuthContext);
 
-  const LoginHandler = (email, password) => {
-    login(email, password);
+  const SendHandler = (email) => {
+    forgotPassword(email);
   };
 
-  const RegisterHandler = () => {
-    navigation.navigate("Register");
-  };
-
-  const ShowPasswordHandler = () => {
-    if (showPassword) {
-      setShowPassword(false);
-    } else {
-      setShowPassword(true);
-    }
-  };
-
-  const ForgotPasswordHandler = () => {
-    navigation.navigate("ForgotPassword");
+  const BackHandler = () => {
+    navigation.navigate("Login");
   };
 
   return (
@@ -49,13 +35,18 @@ export default function LoginScreen({ navigation }) {
       <SafeAreaView style={styles.container}>
         {isFocused && (
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+            <MaterialCommunityIcons
+              name="alert-circle-outline"
+              color="lightgreen"
+              size={25}
+              style={{ marginBottom: 10 }}
+            />
+            <Text style={{ color: "black", marginBottom: 20 }}>
+              Please input your email below so we can send you a reset password
+              email.
+            </Text>
             <Text style={styles.text_footer}>E-mail</Text>
             <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="account-outline"
-                color="#4A5C72"
-                size={25}
-              />
               <TextInput
                 editable={true}
                 placeholder="Your email"
@@ -65,66 +56,24 @@ export default function LoginScreen({ navigation }) {
                 }}
               />
             </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>
-              Password
-            </Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="lock-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                placeholder="Your password"
-                style={styles.textinput}
-                onChangeText={(password) => {
-                  setPassword(password);
-                }}
-                secureTextEntry={showPassword}
-              />
-              <TouchableOpacity onPress={ShowPasswordHandler}>
-                {showPassword ? (
-                  <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
-                    size={25}
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
-                    size={25}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                ForgotPasswordHandler();
-              }}
-            >
-              <Text style={{ color: "#009bd1", marginTop: 15 }}>
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
             <View style={styles.buttonGrid}>
               <TouchableOpacity
-                style={styles.LoginButton}
+                style={styles.SendButton}
                 onPress={() => {
-                  LoginHandler(email, password);
+                  SendHandler(email);
                 }}
               >
                 <Text style={[styles.buttonText, { color: "white" }]}>
-                  Login
+                  Send
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.RegisterButton}
+                style={styles.BackButton}
                 onPress={() => {
-                  RegisterHandler();
+                  BackHandler();
                 }}
               >
-                <Text style={styles.buttonText}>Register</Text>
+                <Text style={styles.buttonText}>Back</Text>
               </TouchableOpacity>
             </View>
           </Animatable.View>
@@ -149,7 +98,6 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    // flex: 0.55,
     width: "100%",
     backgroundColor: "white",
     borderTopLeftRadius: 30,
@@ -183,7 +131,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  LoginButton: {
+  SendButton: {
     backgroundColor: "#6495ed",
     padding: 15,
     borderRadius: 100,
@@ -196,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  RegisterButton: {
+  BackButton: {
     backgroundColor: "#D5E5EC",
     padding: 15,
     borderRadius: 100,

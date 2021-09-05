@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo, useReducer } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { ActivityIndicator } from "react-native-paper";
-import { Alert } from "react-native";
+import { LogBox } from "react-native";
 import firebase from "firebase";
 const firebaseConfig = {
   apiKey: "AIzaSyAgtcJ6QegU_wgbGP_9tUB7GA39CP-0n0E",
@@ -27,9 +26,8 @@ import { AuthContext } from "../components/Context";
 import MeTabNavigator from "./MeTabNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
-
+LogBox.ignoreLogs(["Setting a timer"]);
 export default function HomeTabNavigator() {
-  const [isLoading, setIsLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   const authContext = useMemo(() => ({
@@ -37,11 +35,11 @@ export default function HomeTabNavigator() {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then((result) => {
-          console.log(result);
-        })
+        // .then((result) => {
+        //   console.log(result);
+        // })
         .catch((error) => {
-          console.log(error);
+          alert(error);
         });
     },
     logout: () => {
@@ -55,7 +53,6 @@ export default function HomeTabNavigator() {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((result) => {
-          console.log(result);
           firebase
             .firestore()
             .collection("users")
@@ -66,13 +63,18 @@ export default function HomeTabNavigator() {
           alert(error);
         });
     },
+    forgotPassword: (email) => {
+      firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then((result) => {
+          alert("Please check your email...");
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
   }));
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     dispatch({ type: "RETRIEVE_TOKEN", token: "123" });
-  //   }, 1000);
-  // }, []);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -85,15 +87,6 @@ export default function HomeTabNavigator() {
       }
     });
   });
-
-  // if (loginState.isLoading) {
-  //   // console.log(initialLoginState.isLoading);
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <ActivityIndicator size="large" />
-  //     </View>
-  //   );
-  // }
 
   return (
     <AuthContext.Provider value={authContext}>
