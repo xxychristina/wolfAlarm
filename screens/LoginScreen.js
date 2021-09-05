@@ -36,7 +36,6 @@ export default function LoginScreen({ navigation }) {
     if (showPassword) {
       setShowPassword(false);
     } else {
-      console.log("run");
       setShowPassword(true);
     }
   };
@@ -61,7 +60,7 @@ export default function LoginScreen({ navigation }) {
                   setEmail(email);
                 }}
               />
-              <MaterialCommunityIcons name="check" color="green" size={25} />
+              {/* <MaterialCommunityIcons name="check" color="green" size={25} /> */}
             </View>
             <Text style={[styles.text_footer, { marginTop: 20 }]}>
               Password
@@ -83,14 +82,14 @@ export default function LoginScreen({ navigation }) {
               <TouchableOpacity onPress={ShowPasswordHandler}>
                 {showPassword ? (
                   <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
+                    name="eye-off"
+                    color="gray"
                     size={25}
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
+                    name="eye"
+                    color="#4169e1"
                     size={25}
                   />
                 )}

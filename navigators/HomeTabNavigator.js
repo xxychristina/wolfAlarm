@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useReducer } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { ActivityIndicator } from "react-native-paper";
-import { View } from "react-native";
+import { Alert } from "react-native";
 import firebase from "firebase";
 const firebaseConfig = {
   apiKey: "AIzaSyAgtcJ6QegU_wgbGP_9tUB7GA39CP-0n0E",
@@ -24,55 +24,13 @@ import MeScreen from "../screens/MeScreen";
 
 // Components
 import { AuthContext } from "../components/Context";
-import LoginScreen from "../screens/LoginScreen";
-import RegisterScreen from "../screens/RegisterScreen";
 import MeTabNavigator from "./MeTabNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function HomeTabNavigator() {
   const [isLoading, setIsLoading] = useState(false);
-  // const [email, setEmail] = useState("test@gmail.com");
-  const [email, setEmail] = useState(null);
-
-  const [password, setPassword] = useState("1234");
-
   const [loggedIn, setLoggedIn] = useState(false);
-
-  const initialLoginState = {
-    isLoading: true,
-    email: null,
-    userToken: null,
-  };
-
-  const loginReducer = (prevState, action) => {
-    switch (action.type) {
-      case "RETRIEVE_TOKEN":
-        return {
-          ...prevState,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case "LOGIN":
-        return {
-          ...prevState,
-          email: action.email,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case "LOGOUT":
-        return { ...prevState, email: null, userToken: null, isLoading: false };
-      case "REGISTER":
-        return {
-          ...prevState,
-          email: action.email,
-          userToken: action.token,
-          isLoading: false,
-        };
-    }
-  };
-
-  const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
 
   const authContext = useMemo(() => ({
     login: (email, password) => {
@@ -105,7 +63,7 @@ export default function HomeTabNavigator() {
             .set({ email, phone, name });
         })
         .catch((error) => {
-          console.log(error);
+          alert(error);
         });
     },
   }));

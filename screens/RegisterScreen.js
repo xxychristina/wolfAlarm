@@ -5,29 +5,30 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
   ImageBackground,
-  Dimensions,
   TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { AuthContext } from "../components/Context";
 import * as Animatable from "react-native-animatable";
 import { useIsFocused } from "@react-navigation/core";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import firebase from "firebase";
 
 // Background Image
 import Welcome from "../assets/Welcome.png";
 
-const { width, height } = Dimensions.get("window");
-
 export default function RegisterScreen({ navigation }) {
   const isFocused = useIsFocused();
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [name, setName] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [phone, setPhone] = useState(null);
+  const [samePassword, setSamePassword] = useState(true);
 
   const { register } = useContext(AuthContext);
 
@@ -36,7 +37,11 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const RegisterHandler = (email, phone, password, name) => {
-    register(email, phone, password, name);
+    if (samePassword) {
+      register(email, phone, password, name);
+    } else {
+      Alert.alert("Error: Passwords are not the same");
+    }
   };
 
   const ShowPasswordHandler = () => {
@@ -49,7 +54,15 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <ImageBackground source={Welcome} style={styles.backgroundImg}>
-      <SafeAreaView style={styles.container}>
+      <ScrollView
+        // behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+        contentContainerStyle={{
+          flexGrow: 1,
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
         {isFocused && (
           <Animatable.View animation="fadeInUpBig" style={styles.footer}>
             <Text style={styles.text_footer}>E-mail</Text>
@@ -114,24 +127,34 @@ export default function RegisterScreen({ navigation }) {
                 onChangeText={(password) => {
                   setPassword(password);
                 }}
+                onBlur={() => {
+                  if (confirmPassword != null && confirmPassword != password) {
+                    setSamePassword(false);
+                  } else {
+                    setSamePassword(true);
+                  }
+                }}
                 secureTextEntry={showPassword}
               />
               <TouchableOpacity onPress={ShowPasswordHandler}>
                 {showPassword ? (
                   <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
+                    name="eye-off"
+                    color="gray"
                     size={25}
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
+                    name="eye"
+                    color="#4169e1"
                     size={25}
                   />
                 )}
               </TouchableOpacity>
             </View>
+            <Text style={{ color: "gray" }}>
+              Password should contain at least 6 characters
+            </Text>
             <Text style={[styles.text_footer, { marginTop: 20 }]}>
               Confirm Password
             </Text>
@@ -147,30 +170,38 @@ export default function RegisterScreen({ navigation }) {
                 onChangeText={(confirmPassword) => {
                   setConfirmPassword(confirmPassword);
                 }}
+                onBlur={() => {
+                  if (confirmPassword != password) {
+                    setSamePassword(false);
+                  } else {
+                    setSamePassword(true);
+                  }
+                }}
                 secureTextEntry={showPassword}
               />
               <TouchableOpacity onPress={ShowPasswordHandler}>
                 {showPassword ? (
                   <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
+                    name="eye-off"
+                    color="gray"
                     size={25}
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
+                    name="eye"
+                    color="#4169e1"
                     size={25}
                   />
                 )}
               </TouchableOpacity>
             </View>
+            {!samePassword && (
+              <Text style={{ color: "red" }}>Password not the same</Text>
+            )}
             <View style={styles.buttonGrid}>
               <TouchableOpacity
                 style={styles.RegisterButton}
                 onPress={() => {
-                  // console.log("This is " + data.email);
-                  console.log(email);
                   RegisterHandler(email, phone, password, name);
                 }}
               >
@@ -189,7 +220,7 @@ export default function RegisterScreen({ navigation }) {
             </View>
           </Animatable.View>
         )}
-      </SafeAreaView>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -197,8 +228,8 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    // justifyContent: "flex-end",
+    // alignItems: "center",
     flexDirection: "column",
   },
 
