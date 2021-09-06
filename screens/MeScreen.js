@@ -21,7 +21,7 @@ export default function MeScreen({ navigation }) {
     name: "makabaka",
     phone: "+6142332323",
     email: "123@gmail.com",
-    avatar: "",
+    avatar: "http",
   });
 
   const getUser = async () => {
