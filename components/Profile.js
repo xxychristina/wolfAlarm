@@ -4,6 +4,11 @@ import Modal from 'react-native-modal'
 import {Input, Button} from 'react-native-elements'
 
 export default function Profile({user, isVisible, toggle}) {
+  const changeButton = 
+  <View>
+    <Button type="outline" title="change"></Button>
+  </View>
+
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.modalContainer}>
@@ -13,9 +18,14 @@ export default function Profile({user, isVisible, toggle}) {
           label='name'
           placeholder={user.name}
         ></Input>
+        {/* TODO: change phone */}
         <Input
           label='phone'
-          placeholder={user.phone}>
+          editable={false}
+          rightIcon={changeButton}
+          defaultValue={user.phone}
+          placeholderTextColor="#000"
+          >
         </Input>
         <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
           <View>
