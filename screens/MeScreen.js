@@ -1,28 +1,29 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  Image,
 } from "react-native";
+import { Input } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../components/Context";
-import * as ImagePicker from "expo-image-picker";
-import firebase from "firebase";
+
+import Profile from "../components/Profile";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState("MAKABAKA");
-  const [prevName, setPrevName] = useState(name);
-  const [phone, setPhone] = useState("+6104111111");
-  const [prevPhone, setPrevPhone] = useState(phone);
-  const [user, setUser] = useState(firebase.auth().currentUser.uid);
-  const [avatar, setAvatar] = useState(null);
 
-  const { logout, updateUserProfile } = useContext(AuthContext);
+  const userInfo = {
+    id: '1',
+    name: 'makabaka',
+    phone: '+6142332323',
+    email: '123@gmail.com',
+    avartar: 'TODO: '
+  }
+
+  const { logout } = useContext(AuthContext);
 
   // TODO: retrieve data from firebase
 
@@ -35,13 +36,12 @@ export default function MeScreen({ navigation }) {
   };
 
   const SignOutHandler = () => {
+    // TODO: signout
     logout();
   };
 
   const EditHandler = () => {
-    if (!isEditing) {
-      setIsEditing(true);
-    }
+      setIsEditing(!isEditing);
   };
 
   const SaveHandler = () => {
@@ -49,80 +49,25 @@ export default function MeScreen({ navigation }) {
     setIsEditing(false);
   };
 
-  const CancelHandler = () => {
-    setName(prevName);
-    setPhone(prevPhone);
-    setIsEditing(false);
-  };
-
-  let changeAvatar = async () => {
-    let permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert("Need to access your camera roll for your avatar.");
-      return;
-    }
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    if (pickerResult.cancelled === true) {
-      return;
-    }
-    setAvatar(pickerResult.uri);
-    updateUserProfile(user, name, phone, pickerResult.uri);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
-        <TouchableOpacity onPress={changeAvatar}>
-          <View style={styles.profilePictureEmpty}>
-            {avatar != null && (
-              <Image source={{ uri: avatar }} style={styles.profilePicture} />
-            )}
-          </View>
-        </TouchableOpacity>
-
+        <View style={styles.profilePicture}></View>
         <View style={styles.detailsGrid}>
-          <TextInput
-            editable={isEditing}
-            // style={isEditing ? styles.editing : styles.name}
+          <Text
             style={styles.name}
-            onChangeText={(name) => {
-              setName(name);
-            }}
           >
-            {name}
-          </TextInput>
-          <TextInput
-            editable={isEditing}
-            // style={isEditing ? styles.editing : styles.phone}
+            {userInfo.name}
+          </Text>
+          <Text
             style={styles.phone}
-            onChangeText={(phone) => {
-              setPhone(phone);
-            }}
           >
-            {phone}
-          </TextInput>
+            {userInfo.phone}
+          </Text>
         </View>
         {isEditing ? (
-          <View style={styles.buttonGird}>
-            <TouchableOpacity onPress={SaveHandler}>
-              <MaterialCommunityIcons
-                name="content-save-outline"
-                color="#4A5C72"
-                size={26}
-              ></MaterialCommunityIcons>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={CancelHandler}
-              style={styles.cancelButton}
-            >
-              <MaterialCommunityIcons
-                name="cancel"
-                color="#4A5C72"
-                size={26}
-              ></MaterialCommunityIcons>
-            </TouchableOpacity>
-          </View>
+          <Profile user={userInfo} isVisible={isEditing} toggle={EditHandler}></Profile>
         ) : (
           <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
             <MaterialCommunityIcons
@@ -200,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  profilePictureEmpty: {
+  profilePicture: {
     width: 100,
     height: 100,
     borderRadius: 100 / 2,
@@ -209,15 +154,9 @@ const styles = StyleSheet.create({
     marginLeft: 35,
   },
 
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 100 / 2,
-  },
-
   detailsGrid: {
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginLeft: 20,
     marginTop: 140,
   },
@@ -225,11 +164,13 @@ const styles = StyleSheet.create({
   name: {
     color: "#000",
     fontSize: 20,
+    marginLeft: 13
   },
 
   phone: {
     color: "#4A5C72",
     fontSize: 20,
+    marginTop: 5
   },
 
   editButton: {

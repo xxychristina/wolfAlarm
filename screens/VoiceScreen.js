@@ -86,7 +86,6 @@ export default function VoiceScreen() {
     },
   ];
   const [settingState, setSettingState] = React.useState(false);
-  let checkbox;
   // if(settingModel){
   //   checkbox =
   //   <BouncyCheckbox
@@ -179,24 +178,6 @@ export default function VoiceScreen() {
           ></MaterialCommunityIcons>
         </View>
       </TouchableOpacity>
-      {/* <View styles={styles.editor}>
-        <View styles={styles.editTool}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-                name="plus-circle-outline"
-                size={26}
-              ></MaterialCommunityIcons>
-          </TouchableOpacity>
-        </View>
-        <View styles={styles.editTool}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-                name="plus-circle-outline"
-                size={26}
-              ></MaterialCommunityIcons>
-          </TouchableOpacity>
-        </View>
-      </View> */}
     </SafeAreaView>
   );
 }

@@ -8,12 +8,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function EmergencyContact({name, phone, id}) {
-  const deletePressHandler = () => {
-    //TODO: delete popup
-    console.log("delete")
-  };
-
+export default function EmergencyContact({name, phone, id, deletePressHandler}) {
   return (
     <View style={styles.emergencyContact}>
       <View style={styles.profilePicture}></View>
@@ -32,6 +27,7 @@ export default function EmergencyContact({name, phone, id}) {
           name="trash-can-outline"
           color="#4A5C72"
           size={26}
+          onPress={deletePressHandler}
         ></MaterialCommunityIcons>
       </TouchableOpacity>
     </View>

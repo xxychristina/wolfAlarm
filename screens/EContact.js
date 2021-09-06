@@ -14,9 +14,19 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import EmergencyContact from "../components/EmergencyContact";
 import Modal from "react-native-modal";
 import { FlatList } from "react-native-gesture-handler";
+import DeleteConfirm from "../components/DeleteConfirm";
 
 export default function EContact({ navigation }) {
   const [inviteModal, setInviteModal] = React.useState(false);
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [deleteItem, setDeleteItem] = React.useState(0);
+
+  const handleDelete = () => {
+    if(deleteItem != 0) {
+      console.log(deleteItem);
+      setDeleteModal(!deleteModal)
+    }
+  }
 
   const toggleInvite = () => {
     setInviteModal(!inviteModal);
@@ -57,6 +67,7 @@ export default function EContact({ navigation }) {
     });
   }, [navigation]);
 
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.centerView}>
@@ -95,10 +106,12 @@ export default function EContact({ navigation }) {
               name={item.name}
               phone={item.phone}
               id={item.id}
+              deletePressHandler={function() {setDeleteItem(item.id); setDeleteModal(!deleteModal)}}
             ></EmergencyContact>
           )}
         ></FlatList>
       </View>
+      <DeleteConfirm isVisible={deleteModal} deleteEvent={handleDelete} toggle={() => {setDeleteModal(!deleteModal)}}></DeleteConfirm>
     </SafeAreaView>
   );
 }
