@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -11,13 +10,18 @@ import { Input } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../components/Context";
 
+import Profile from "../components/Profile";
+
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState("MAKABAKA");
-  const [prevName, setPrevName] = useState(name);
-  const [phone, setPhone] = useState("+6104111111");
-  const [prevPhone, setPrevPhone] = useState(phone);
-  const [avatar, setAvatar] = useState(null);
+
+  const userInfo = {
+    id: '1',
+    name: 'makabaka',
+    phone: '+6142332323',
+    email: '123@gmail.com',
+    avartar: 'TODO: '
+  }
 
   const { logout } = useContext(AuthContext);
 
@@ -37,9 +41,7 @@ export default function MeScreen({ navigation }) {
   };
 
   const EditHandler = () => {
-    if (!isEditing) {
-      setIsEditing(true);
-    }
+      setIsEditing(!isEditing);
   };
 
   const SaveHandler = () => {
@@ -47,58 +49,25 @@ export default function MeScreen({ navigation }) {
     setIsEditing(false);
   };
 
-  const CancelHandler = () => {
-    setName(prevName);
-    setPhone(prevPhone);
-    setIsEditing(false);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.profilePicture}></View>
         <View style={styles.detailsGrid}>
-          <TextInput
-            editable={isEditing}
-            // style={isEditing ? styles.editing : styles.name}
+          <Text
             style={styles.name}
-            onChangeText={(name) => {
-              setName(name);
-            }}
           >
-            {name}
-          </TextInput>
-          <TextInput
-            editable={isEditing}
-            // style={isEditing ? styles.editing : styles.phone}
+            {userInfo.name}
+          </Text>
+          <Text
             style={styles.phone}
-            onChangeText={(phone) => {
-              setPhone(phone);
-            }}
           >
-            {phone}
-          </TextInput>
+            {userInfo.phone}
+          </Text>
         </View>
         {isEditing ? (
-          <View style={styles.buttonGird}>
-            <TouchableOpacity onPress={SaveHandler}>
-              <MaterialCommunityIcons
-                name="content-save-outline"
-                color="#4A5C72"
-                size={26}
-              ></MaterialCommunityIcons>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={CancelHandler}
-              style={styles.cancelButton}
-            >
-              <MaterialCommunityIcons
-                name="cancel"
-                color="#4A5C72"
-                size={26}
-              ></MaterialCommunityIcons>
-            </TouchableOpacity>
-          </View>
+          <Profile user={userInfo} isVisible={isEditing} toggle={EditHandler}></Profile>
         ) : (
           <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
             <MaterialCommunityIcons
@@ -187,7 +156,7 @@ const styles = StyleSheet.create({
 
   detailsGrid: {
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginLeft: 20,
     marginTop: 140,
   },
@@ -195,11 +164,13 @@ const styles = StyleSheet.create({
   name: {
     color: "#000",
     fontSize: 20,
+    marginLeft: 13
   },
 
   phone: {
     color: "#4A5C72",
     fontSize: 20,
+    marginTop: 5
   },
 
   editButton: {
