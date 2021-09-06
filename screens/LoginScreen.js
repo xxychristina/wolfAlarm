@@ -21,10 +21,6 @@ export default function LoginScreen({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
 
   const { login } = useContext(AuthContext);
 
