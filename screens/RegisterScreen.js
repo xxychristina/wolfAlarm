@@ -14,6 +14,8 @@ import { AuthContext } from "../components/Context";
 import * as Animatable from "react-native-animatable";
 import { useIsFocused } from "@react-navigation/core";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import firebase from "firebase";
+import uuid from "react-native-uuid";
 
 // Background Image
 import Welcome from "../assets/Welcome.png";
@@ -21,11 +23,11 @@ import Welcome from "../assets/Welcome.png";
 export default function RegisterScreen({ navigation }) {
   const isFocused = useIsFocused();
   const [showPassword, setShowPassword] = useState(true);
+  const [name, setName] = useState(null);
+  const [phone, setPhone] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [name, setName] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
-  const [phone, setPhone] = useState(null);
   const [samePassword, setSamePassword] = useState(true);
 
   const { register } = useContext(AuthContext);
@@ -34,9 +36,9 @@ export default function RegisterScreen({ navigation }) {
     navigation.navigate("Login");
   };
 
-  const RegisterHandler = (email, phone, password, name) => {
+  const RegisterHandler = (id, name, phone, email, avatar, password) => {
     if (samePassword) {
-      register(email, phone, password, name);
+      register(id, name, phone, email, avatar, password);
     } else {
       Alert.alert("Error: Passwords are not the same");
     }
@@ -77,7 +79,7 @@ export default function RegisterScreen({ navigation }) {
                 }}
               />
             </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>
+            {/* <Text style={[styles.text_footer, { marginTop: 20 }]}>
               Phone number
             </Text>
             <View style={styles.action}>
@@ -93,7 +95,7 @@ export default function RegisterScreen({ navigation }) {
                   setPhone(phone);
                 }}
               />
-            </View>
+            </View> */}
             <Text style={[styles.text_footer, { marginTop: 20 }]}>Name</Text>
             <View style={styles.action}>
               <MaterialCommunityIcons
@@ -199,7 +201,9 @@ export default function RegisterScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.RegisterButton}
                 onPress={() => {
-                  RegisterHandler(email, phone, password, name);
+                  let userId = uuid.v4();
+                  console.log(password);
+                  RegisterHandler(userId, name, phone, email, null, password);
                 }}
               >
                 <Text style={[styles.buttonText, { color: "white" }]}>

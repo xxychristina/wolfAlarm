@@ -1,40 +1,92 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import Modal from 'react-native-modal'
-import {Input, Button} from 'react-native-elements'
+import React, { useState, useContext } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import Modal from "react-native-modal";
+import { Input, Button } from "react-native-elements";
+import { AuthContext } from "../components/Context";
+import firebase from "firebase";
+import * as ImagePicker from "expo-image-picker";
 
-export default function Profile({user, isVisible, toggle}) {
+export default function Profile({ user, isVisible, toggle }) {
+  const [newUserInfo, setNewUserInfo] = useState({
+    name: user.name,
+    phone: user.phone,
+  });
+
+  const [newAvatar, setNewAvatar] = useState(user.avatar);
+
+  const { updateUserProfile } = useContext(AuthContext);
+
+  const save = () => {
+    let userId = firebase.auth().currentUser.uid;
+    updateUserProfile(userId, newUserInfo.name, newUserInfo.phone, newAvatar);
+  };
+
+  const AvatarChangeHandler = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setNewAvatar(pickerResult.uri);
+  };
+
+  const NameChangeHandler = (newName) => {
+    setNewUserInfo((prevState) => ({ ...prevState, name: newName }));
+  };
+
+  const PhoneChangeHandler = (newPhone) => {
+    setNewUserInfo((prevState) => ({ ...prevState, phone: newPhone }));
+  };
+
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.modalContainer}>
-        <View style={styles.profilePicture}>
-        </View>
+        {newAvatar === null ? (
+          <View style={styles.profilePictureEmpty} />
+        ) : (
+          <Image source={{ uri: newAvatar }} style={styles.profilePicture} />
+        )}
+        <TouchableOpacity onPress={AvatarChangeHandler}>
+          <Text style={{ color: "#4169e1", alignSelf: "center" }}>
+            Edit avatar
+          </Text>
+        </TouchableOpacity>
         <Input
-          label='name'
+          label="name"
           placeholder={user.name}
+          onChangeText={NameChangeHandler}
         ></Input>
         <Input
-          label='phone'
-          placeholder={user.phone}>
-        </Input>
-        <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
+          label="phone"
+          placeholder={user.phone}
+          onChangeText={PhoneChangeHandler}
+        ></Input>
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <View>
             <Button type="clear" title="Cancle" onPress={toggle}></Button>
           </View>
           <View>
-            <Button type="clear" title="Save" onPress={function(){
-              save();
-              toggle();
-            }}></Button>
+            <Button
+              type="clear"
+              title="Save"
+              onPress={function () {
+                save();
+                toggle();
+              }}
+            ></Button>
           </View>
         </View>
       </View>
     </Modal>
-  )
-}
-
-const save = ()=> {
-  console.log("save")
+  );
 }
 
 const styles = StyleSheet.create({
@@ -48,14 +100,20 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
+  },
+  profilePictureEmpty: {
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
+    backgroundColor: "#C4C4C4",
+    marginVertical: 10,
+    alignSelf: "center",
   },
   profilePicture: {
     width: 100,
     height: 100,
     borderRadius: 100 / 2,
-    backgroundColor: "#C4C4C4",
-    marginVertical: 30,
-    alignSelf: "center"
+    alignSelf: "center",
   },
-})
+});

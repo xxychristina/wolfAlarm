@@ -48,16 +48,17 @@ export default function HomeTabNavigator() {
         .signOut()
         .then(() => console.log("user sign out"));
     },
-    register: (email, phone, password, name) => {
+    register: (id, name, phone, email, avatar, password) => {
+      console.log("Here " + password);
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then((result) => {
+        .then(() => {
           firebase
             .firestore()
             .collection("users")
             .doc(firebase.auth().currentUser.uid)
-            .set({ email, phone, name });
+            .set({ id, name, phone, email, avatar });
         })
         .catch((error) => {
           alert(error);
@@ -67,21 +68,21 @@ export default function HomeTabNavigator() {
       firebase
         .auth()
         .sendPasswordResetEmail(email)
-        .then((result) => {
+        .then(() => {
           alert("Please check your email...");
         })
         .catch((error) => {
           alert(error);
         });
     },
-    updateUserProfile: (userID, name, phone, avatar) => {
+    updateUserProfile: (firebaseID, name, phone, avatar) => {
       firebase
         .firestore()
         .collection("users")
-        .doc(userID)
-        .set({ name, phone, avatar })
-        .then((result) => {
-          alert(result);
+        .doc(firebaseID)
+        .update({ name: name, phone: phone, avatar: avatar })
+        .then(() => {
+          alert("Data updated");
         })
         .catch((error) => {
           alert(error);

@@ -1,27 +1,46 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Input } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../components/Context";
+import firebase from "firebase";
 
 import Profile from "../components/Profile";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const userInfo = {
-    id: '1',
-    name: 'makabaka',
-    phone: '+6142332323',
-    email: '123@gmail.com',
-    avartar: 'TODO: '
-  }
+  const [userInfo, setUserInfo] = useState({
+    id: "1",
+    name: "makabaka",
+    phone: "+6142332323",
+    email: "123@gmail.com",
+    avatar: "",
+  });
+
+  const getUser = async () => {
+    let docId = await firebase.auth().currentUser.uid;
+    const currentUser = firebase
+      .firestore()
+      .collection("users")
+      .doc(docId)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          setUserInfo(snapshot.data());
+        }
+      });
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const { logout } = useContext(AuthContext);
 
@@ -41,7 +60,8 @@ export default function MeScreen({ navigation }) {
   };
 
   const EditHandler = () => {
-      setIsEditing(!isEditing);
+    setIsEditing(!isEditing);
+    getUser();
   };
 
   const SaveHandler = () => {
@@ -49,25 +69,27 @@ export default function MeScreen({ navigation }) {
     setIsEditing(false);
   };
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
-        <View style={styles.profilePicture}></View>
+        {userInfo.avatar === null ? (
+          <View style={styles.profilePictureEmpty} />
+        ) : (
+          <Image
+            source={{ uri: userInfo.avatar }}
+            style={styles.profilePicture}
+          />
+        )}
         <View style={styles.detailsGrid}>
-          <Text
-            style={styles.name}
-          >
-            {userInfo.name}
-          </Text>
-          <Text
-            style={styles.phone}
-          >
-            {userInfo.phone}
-          </Text>
+          <Text style={styles.name}>{userInfo.name}</Text>
+          <Text style={styles.phone}>{userInfo.phone}</Text>
         </View>
         {isEditing ? (
-          <Profile user={userInfo} isVisible={isEditing} toggle={EditHandler}></Profile>
+          <Profile
+            user={userInfo}
+            isVisible={isEditing}
+            toggle={EditHandler}
+          ></Profile>
         ) : (
           <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
             <MaterialCommunityIcons
@@ -145,6 +167,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
+  profilePictureEmpty: {
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
+  },
+
   profilePicture: {
     width: 100,
     height: 100,
@@ -155,8 +183,9 @@ const styles = StyleSheet.create({
   },
 
   detailsGrid: {
+    flex: 1,
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginLeft: 20,
     marginTop: 140,
   },
@@ -164,18 +193,18 @@ const styles = StyleSheet.create({
   name: {
     color: "#000",
     fontSize: 20,
-    marginLeft: 13
+    marginLeft: 13,
   },
 
   phone: {
     color: "#4A5C72",
     fontSize: 20,
-    marginTop: 5
+    marginTop: 5,
   },
 
   editButton: {
     marginTop: 165,
-    marginLeft: 20,
+    marginHorizontal: 20,
   },
 
   buttonGird: {
