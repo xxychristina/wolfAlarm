@@ -74,6 +74,19 @@ export default function HomeTabNavigator() {
           alert(error);
         });
     },
+    updateUserProfile: (userID, name, phone, avatar) => {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(userID)
+        .set({ name, phone, avatar })
+        .then((result) => {
+          alert(result);
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
   }));
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,10 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
-import { Input } from "react-native-elements";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { AuthContext } from "../components/Context";
+import * as ImagePicker from "expo-image-picker";
+import firebase from "firebase";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,9 +19,10 @@ export default function MeScreen({ navigation }) {
   const [prevName, setPrevName] = useState(name);
   const [phone, setPhone] = useState("+6104111111");
   const [prevPhone, setPrevPhone] = useState(phone);
+  const [user, setUser] = useState(firebase.auth().currentUser.uid);
   const [avatar, setAvatar] = useState(null);
 
-  const { logout } = useContext(AuthContext);
+  const { logout, updateUserProfile } = useContext(AuthContext);
 
   // TODO: retrieve data from firebase
 
@@ -32,7 +35,6 @@ export default function MeScreen({ navigation }) {
   };
 
   const SignOutHandler = () => {
-    // TODO: signout
     logout();
   };
 
@@ -53,10 +55,32 @@ export default function MeScreen({ navigation }) {
     setIsEditing(false);
   };
 
+  let changeAvatar = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Need to access your camera roll for your avatar.");
+      return;
+    }
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setAvatar(pickerResult.uri);
+    updateUserProfile(user, name, phone, pickerResult.uri);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profile}>
-        <View style={styles.profilePicture}></View>
+        <TouchableOpacity onPress={changeAvatar}>
+          <View style={styles.profilePictureEmpty}>
+            {avatar != null && (
+              <Image source={{ uri: avatar }} style={styles.profilePicture} />
+            )}
+          </View>
+        </TouchableOpacity>
+
         <View style={styles.detailsGrid}>
           <TextInput
             editable={isEditing}
@@ -176,13 +200,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  profilePicture: {
+  profilePictureEmpty: {
     width: 100,
     height: 100,
     borderRadius: 100 / 2,
     backgroundColor: "#C4C4C4",
     marginTop: 140,
     marginLeft: 35,
+  },
+
+  profilePicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
   },
 
   detailsGrid: {
