@@ -84,13 +84,11 @@ export default function MeScreen({ navigation }) {
           <Text style={styles.name}>{userInfo.name}</Text>
           <Text style={styles.phone}>{userInfo.phone}</Text>
         </View>
-        {isEditing ? (
-          <Profile
-            user={userInfo}
-            isVisible={isEditing}
-            toggle={EditHandler}
-          ></Profile>
-        ) : (
+        <Profile
+          user={userInfo}
+          isVisible={isEditing}
+          toggle={EditHandler}
+        ></Profile>
           <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
             <MaterialCommunityIcons
               name="circle-edit-outline"
@@ -98,7 +96,6 @@ export default function MeScreen({ navigation }) {
               size={26}
             ></MaterialCommunityIcons>
           </TouchableOpacity>
-        )}
       </View>
       <TouchableOpacity style={styles.navigateTabs} onPress={EChandler}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
