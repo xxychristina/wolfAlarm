@@ -46,6 +46,15 @@ export default function Profile({ user, isVisible, toggle }) {
     setNewUserInfo((prevState) => ({ ...prevState, phone: newPhone }));
   };
 
+<<<<<<< HEAD
+=======
+export default function Profile({user, isVisible, toggle}) {
+  const changeButton = 
+  <View>
+    <Button type="outline" title="change"></Button>
+  </View>
+
+>>>>>>> Chris
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.modalContainer}>
@@ -64,12 +73,24 @@ export default function Profile({ user, isVisible, toggle }) {
           placeholder={user.name}
           onChangeText={NameChangeHandler}
         ></Input>
+        {/* TODO: change phone */}
         <Input
+<<<<<<< HEAD
           label="phone"
           placeholder={user.phone}
           onChangeText={PhoneChangeHandler}
         ></Input>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+=======
+          label='phone'
+          editable={false}
+          rightIcon={changeButton}
+          defaultValue={user.phone}
+          placeholderTextColor="#000"
+          >
+        </Input>
+        <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
+>>>>>>> Chris
           <View>
             <Button type="clear" title="Cancle" onPress={toggle}></Button>
           </View>

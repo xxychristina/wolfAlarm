@@ -11,94 +11,91 @@ import {
   ScrollView,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { Value } from "react-native-reanimated";
 
 export default function VoiceScreen() {
   const DATA = [
     {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+      id: "1",
       title: "First Item",
-      index: 1,
     },
     {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+      id: "2",
       title: "Second Item",
-      index: 2,
     },
     {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
+      id: "3",
       title: "Third Item",
-      index: 3,
     },
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba67",
-      title: "First Item",
-      index: 1,
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6365",
-      title: "Second Item",
-      index: 2,
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72654",
-      title: "Third Item",
-      index: 3,
-    },
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba21",
-      title: "First Item",
-      index: 1,
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63435",
-      title: "Second Item",
-      index: 2,
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d7245",
-      title: "Third Item",
-      index: 3,
-    },
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba2",
-      title: "First Item",
-      index: 1,
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6343",
-      title: "Second Item",
-      index: 2,
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d724",
-      title: "Third Item",
-      index: 3,
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6343h",
-      title: "Second Item",
-      index: 2,
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d724h",
-      title: "Third Item",
-      index: 3,
-    },
+    // {
+    //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba67",
+    //   title: "First Item",
+    // },
+    // {
+    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6365",
+    //   title: "Second Item",
+    // },
+    // {
+    //   id: "58694a0f-3da1-471f-bd96-145571e29d72654",
+    //   title: "Third Item",
+    // },
+    // {
+    //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba21",
+    //   title: "First Item",
+    // },
+    // {
+    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63435",
+    //   title: "Second Item",
+    // },
+    // {
+    //   id: "58694a0f-3da1-471f-bd96-145571e29d7245",
+    //   title: "Third Item",
+    // },
+    // {
+      
+    //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba2",
+    //   title: "First Item",
+    // },
+    // {
+    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6343",
+    //   title: "Second Item",
+    // },
+    // {
+    //   id: "58694a0f-3da1-471f-bd96-145571e29d724",
+    //   title: "Third Item",
+    // },
+    // {
+    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6343h",
+    //   title: "Second Item",
+    // },
+    // {
+    //   id: "58694a0f-3da1-471f-bd96-145571e29d724h",
+    //   title: "Third Item",
+    // },
   ];
   const [settingState, setSettingState] = React.useState(false);
-  // if(settingModel){
-  //   checkbox =
-  //   <BouncyCheckbox
-  //     size={25}
-  //     fillColor="red"
-  //     unfillColor="#FFFFFF"
-  //     style={{marginLeft: 4}}
-  //   ></BouncyCheckbox>
-  // }else{
-  //   checkbox = null;
-  // }
 
-  let Item = ({ title, index }) => (
+  var newData = DATA;
+
+  let handleClick = (id) => {
+    // console.log(id);
+    let selected = newData.map((val, i) => {
+      if(val.id == id) {
+        if(val.isSelected == null || val.isSelected == false){
+          return{...val, isSelected: true};
+        }else{
+          return{...val, isSelected: false};
+        }
+      }else{
+        return val;
+      }
+    })
+    newData = selected;
+    console.log(newData)
+  }
+
+
+  let Item = ({ title, index, id }) => (
     <View style={settingState ? styles.listItemC : styles.listItem}>
       <View style={styles.dot}>
         <Text style={{ textAlign: "center" }}>{index}. </Text>
@@ -116,6 +113,7 @@ export default function VoiceScreen() {
             ? { display: "flex", marginLeft: 5 }
             : { display: "none" }
         }
+        onPress={() => handleClick(id)}
       ></BouncyCheckbox>
     </View>
   );
@@ -165,7 +163,7 @@ export default function VoiceScreen() {
         <FlatList
           data={DATA}
           renderItem={({ item, index }) => (
-            <Item title={item.title} index={index + 1} />
+            <Item title={item.title} index={index + 1} id={item.id}/>
           )}
           keyExtractor={(item) => item.id.toString()}
         />
