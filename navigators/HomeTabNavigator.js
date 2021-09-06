@@ -81,9 +81,6 @@ export default function HomeTabNavigator() {
         .collection("users")
         .doc(firebaseID)
         .update({ name: name, phone: phone, avatar: avatar })
-        .then(() => {
-          alert("Data updated");
-        })
         .catch((error) => {
           alert(error);
         });
