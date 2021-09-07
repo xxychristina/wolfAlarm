@@ -49,7 +49,6 @@ export default function HomeTabNavigator() {
         .then(() => console.log("user sign out"));
     },
     register: (id, name, phone, email, avatar, password) => {
-      console.log("Here " + password);
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)

@@ -151,7 +151,7 @@ export default function RegisterScreen({ navigation }) {
                 )}
               </TouchableOpacity>
             </View>
-            <Text style={{ color: "gray" }}>
+            <Text style={{ color: "red" }}>
               Password should contain at least 6 characters
             </Text>
             <Text style={[styles.text_footer, { marginTop: 20 }]}>

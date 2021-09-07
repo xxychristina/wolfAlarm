@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Dimensions,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -15,6 +17,7 @@ import Profile from "../components/Profile";
 
 export default function MeScreen({ navigation }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [userInfo, setUserInfo] = useState({
     id: "1",
@@ -26,6 +29,7 @@ export default function MeScreen({ navigation }) {
 
   const getUser = async () => {
     let docId = await firebase.auth().currentUser.uid;
+    setIsLoading(true);
     const currentUser = firebase
       .firestore()
       .collection("users")
@@ -34,6 +38,7 @@ export default function MeScreen({ navigation }) {
       .then((snapshot) => {
         if (snapshot.exists) {
           setUserInfo(snapshot.data());
+          setIsLoading(false);
         }
       });
   };
@@ -70,85 +75,102 @@ export default function MeScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.profile}>
-        {userInfo.avatar === null ? (
-          <View style={styles.profilePictureEmpty} />
-        ) : (
-          <Image
-            source={{ uri: userInfo.avatar }}
-            style={styles.profilePicture}
-          />
-        )}
-        <View style={styles.detailsGrid}>
-          <Text style={styles.name}>{userInfo.name}</Text>
-          <Text style={styles.phone}>{userInfo.phone}</Text>
+    <View>
+      {isLoading ? (
+        <View
+          style={{
+            position: "absolute",
+            alignSelf: "center",
+            marginTop: Dimensions.get("window").height / 2,
+          }}
+        >
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-        {isEditing ? (
-          <Profile
-            user={userInfo}
-            isVisible={isEditing}
-            toggle={EditHandler}
-          ></Profile>
-        ) : (
-          <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
+      ) : (
+        <SafeAreaView style={styles.container}>
+          <View style={styles.profile}>
+            {userInfo.avatar === null ? (
+              <View style={styles.profilePictureEmpty} />
+            ) : (
+              <Image
+                source={{ uri: userInfo.avatar }}
+                style={styles.profilePicture}
+              />
+            )}
+            <View style={styles.detailsGrid}>
+              <Text style={styles.name}>{userInfo.name}</Text>
+              <Text style={styles.phone}>{userInfo.phone}</Text>
+            </View>
+            {isEditing ? (
+              <Profile
+                user={userInfo}
+                isVisible={isEditing}
+                toggle={EditHandler}
+              ></Profile>
+            ) : (
+              <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
+                <MaterialCommunityIcons
+                  name="circle-edit-outline"
+                  color="#4A5C72"
+                  size={26}
+                ></MaterialCommunityIcons>
+              </TouchableOpacity>
+            )}
+          </View>
+          <TouchableOpacity style={styles.navigateTabs} onPress={EChandler}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MaterialCommunityIcons
+                name="cellphone-iphone"
+                color="#4A5C72"
+                size={36}
+              ></MaterialCommunityIcons>
+              <Text style={styles.emergencyContactText}>Emergency Contact</Text>
+            </View>
             <MaterialCommunityIcons
-              name="circle-edit-outline"
+              name="chevron-right"
               color="#4A5C72"
-              size={26}
+              size={30}
+              style={{ marginRight: 15 }}
             ></MaterialCommunityIcons>
           </TouchableOpacity>
-        )}
-      </View>
-      <TouchableOpacity style={styles.navigateTabs} onPress={EChandler}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name="cellphone-iphone"
-            color="#4A5C72"
-            size={36}
-          ></MaterialCommunityIcons>
-          <Text style={styles.emergencyContactText}>Emergency Contact</Text>
-        </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          color="#4A5C72"
-          size={30}
-          style={{ marginRight: 15 }}
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navigateTabs} onPress={HelpHandler}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name="help-circle-outline"
-            color="#4A5C72"
-            size={36}
-          ></MaterialCommunityIcons>
-          <Text style={styles.helpContactText}>Help</Text>
-        </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          color="#4A5C72"
-          size={30}
-          style={{ marginRight: 15 }}
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navigateTabs} onPress={SignOutHandler}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name="exit-to-app"
-            color="#4A5C72"
-            size={36}
-          ></MaterialCommunityIcons>
-          <Text style={styles.helpContactText}>Sign Out</Text>
-        </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          color="#4A5C72"
-          size={30}
-          style={{ marginRight: 15 }}
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-    </SafeAreaView>
+          <TouchableOpacity style={styles.navigateTabs} onPress={HelpHandler}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MaterialCommunityIcons
+                name="help-circle-outline"
+                color="#4A5C72"
+                size={36}
+              ></MaterialCommunityIcons>
+              <Text style={styles.helpContactText}>Help</Text>
+            </View>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              color="#4A5C72"
+              size={30}
+              style={{ marginRight: 15 }}
+            ></MaterialCommunityIcons>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navigateTabs}
+            onPress={SignOutHandler}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MaterialCommunityIcons
+                name="exit-to-app"
+                color="#4A5C72"
+                size={36}
+              ></MaterialCommunityIcons>
+              <Text style={styles.helpContactText}>Sign Out</Text>
+            </View>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              color="#4A5C72"
+              size={30}
+              style={{ marginRight: 15 }}
+            ></MaterialCommunityIcons>
+          </TouchableOpacity>
+        </SafeAreaView>
+      )}
+    </View>
   );
 }
 
