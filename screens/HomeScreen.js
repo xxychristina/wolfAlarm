@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
+import BushMap from "../components/BushMap.js"
 // import Torch from "react-native-torch";
 // import RNImmediatePhoneCall from "react-native-immediate-phone-call";
 // import AudioRecord from "react-native-audio-record";
@@ -31,7 +32,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <MapView style={styles.map} />
+      <BushMap/>
       <View style={styles.buttonGrid}>
         <TouchableOpacity style={styles.button} onPress={SOSPressHandler}>
           <Text style={styles.buttonText}>SOS</Text>
