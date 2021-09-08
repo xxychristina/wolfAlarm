@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import { AuthContext } from "../components/Context";
 import * as Animatable from "react-native-animatable";
@@ -31,55 +32,57 @@ export default function ForgotPasswordScreen({ navigation }) {
   };
 
   return (
-    <ImageBackground source={Welcome} style={styles.backgroundImg}>
-      <SafeAreaView style={styles.container}>
-        {isFocused && (
-          <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <MaterialCommunityIcons
-              name="alert-circle-outline"
-              color="lightgreen"
-              size={25}
-              style={{ marginBottom: 10 }}
-            />
-            <Text style={{ color: "black", marginBottom: 20 }}>
-              Please input your email below so we can send you a reset password
-              email.
-            </Text>
-            <Text style={styles.text_footer}>E-mail</Text>
-            <View style={styles.action}>
-              <TextInput
-                editable={true}
-                placeholder="Your email"
-                style={styles.textinput}
-                onChangeText={(email) => {
-                  setEmail(email);
-                }}
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null}>
+      <ImageBackground source={Welcome} style={styles.backgroundImg}>
+        <SafeAreaView style={styles.container}>
+          {isFocused && (
+            <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+              <MaterialCommunityIcons
+                name="alert-circle-outline"
+                color="lightgreen"
+                size={25}
+                style={{ marginBottom: 10 }}
               />
-            </View>
-            <View style={styles.buttonGrid}>
-              <TouchableOpacity
-                style={styles.SendButton}
-                onPress={() => {
-                  SendHandler(email);
-                }}
-              >
-                <Text style={[styles.buttonText, { color: "white" }]}>
-                  Send
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.BackButton}
-                onPress={() => {
-                  BackHandler();
-                }}
-              >
-                <Text style={styles.buttonText}>Back</Text>
-              </TouchableOpacity>
-            </View>
-          </Animatable.View>
-        )}
-      </SafeAreaView>
-    </ImageBackground>
+              <Text style={{ color: "black", marginBottom: 20 }}>
+                Please input your email below so we can send you a reset
+                password email.
+              </Text>
+              <Text style={styles.text_footer}>E-mail</Text>
+              <View style={styles.action}>
+                <TextInput
+                  editable={true}
+                  placeholder="Your email"
+                  style={styles.textinput}
+                  onChangeText={(email) => {
+                    setEmail(email);
+                  }}
+                />
+              </View>
+              <View style={styles.buttonGrid}>
+                <TouchableOpacity
+                  style={styles.SendButton}
+                  onPress={() => {
+                    SendHandler(email);
+                  }}
+                >
+                  <Text style={[styles.buttonText, { color: "white" }]}>
+                    Send
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.BackButton}
+                  onPress={() => {
+                    BackHandler();
+                  }}
+                >
+                  <Text style={styles.buttonText}>Back</Text>
+                </TouchableOpacity>
+              </View>
+            </Animatable.View>
+          )}
+        </SafeAreaView>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 

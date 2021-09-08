@@ -9,9 +9,11 @@ import {
   Button,
   FlatList,
   ScrollView,
+  Pressable,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Value } from "react-native-reanimated";
+import { Audio } from "expo-av";
 
 export default function VoiceScreen() {
   const DATA = [
@@ -52,7 +54,7 @@ export default function VoiceScreen() {
     //   title: "Third Item",
     // },
     // {
-      
+
     //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba2",
     //   title: "First Item",
     // },
@@ -76,24 +78,64 @@ export default function VoiceScreen() {
   const [settingState, setSettingState] = React.useState(false);
 
   var newData = DATA;
+  var audioUri = 0;
 
   let handleClick = (id) => {
     // console.log(id);
     let selected = newData.map((val, i) => {
-      if(val.id == id) {
-        if(val.isSelected == null || val.isSelected == false){
-          return{...val, isSelected: true};
-        }else{
-          return{...val, isSelected: false};
+      if (val.id == id) {
+        if (val.isSelected == null || val.isSelected == false) {
+          return { ...val, isSelected: true };
+        } else {
+          return { ...val, isSelected: false };
         }
-      }else{
+      } else {
         return val;
       }
-    })
+    });
     newData = selected;
-    console.log(newData)
-  }
+    console.log(newData);
+  };
 
+  const _onLongPress = async () => {
+    try {
+      console.log("Requesting permissions..");
+      console.log("Starting recording..");
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await recording.startAsync();
+      setRecording(recording);
+      setPlaying(true);
+      console.log("Recording started");
+    } catch (err) {
+      console.error("Failed to start recording", err);
+    }
+  };
+
+  const _onPressOut = async () => {
+    console.log("Stopping recording..");
+    setPlaying(false);
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    const uri = recording.getURI();
+    console.log("Recording stopped and stored at", uri);
+    if (!!uri) {
+      audioUri = uri;
+    }
+  };
+
+  const playAudio = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: audioUri },
+      { shouldPlay: false }.uri
+    );
+    setSound(sound);
+    setPlaying(true);
+    console.log("Playing Sound");
+    await sound.playAsync();
+  };
 
   let Item = ({ title, index, id }) => (
     <View style={settingState ? styles.listItemC : styles.listItem}>
@@ -163,19 +205,26 @@ export default function VoiceScreen() {
         <FlatList
           data={DATA}
           renderItem={({ item, index }) => (
-            <Item title={item.title} index={index + 1} id={item.id}/>
+            <Item title={item.title} index={index + 1} id={item.id} />
           )}
           keyExtractor={(item) => item.id.toString()}
         />
       </View>
-      <TouchableOpacity style={{ width: "100%" }}>
+      <Pressable
+        style={{ width: "100%" }}
+        onLongPress={_onLongPress}
+        onPressOut={_onPressOut}
+      >
         <View style={styles.recordButton}>
           <MaterialCommunityIcons
             name="microphone-plus"
             size={28}
           ></MaterialCommunityIcons>
         </View>
-      </TouchableOpacity>
+      </Pressable>
+      <Pressable onPress={playAudio}>
+        <Text>Play</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
