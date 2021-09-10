@@ -10,10 +10,15 @@ import {
   FlatList,
   ScrollView,
   Pressable,
+  Animated,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Value } from "react-native-reanimated";
+import AudioRecorder from "../components/AudioRecorder";
+import SaveModal from "../components/SaveModal";
 import { Audio } from "expo-av";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import Modal from "react-native-modal";
 
 export default function VoiceScreen() {
   const DATA = [
@@ -97,35 +102,6 @@ export default function VoiceScreen() {
     console.log(newData);
   };
 
-  const _onLongPress = async () => {
-    try {
-      console.log("Requesting permissions..");
-      console.log("Starting recording..");
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      await recording.startAsync();
-      setRecording(recording);
-      setPlaying(true);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  };
-
-  const _onPressOut = async () => {
-    console.log("Stopping recording..");
-    setPlaying(false);
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
-    if (!!uri) {
-      audioUri = uri;
-    }
-  };
-
   const playAudio = async () => {
     const { sound } = await Audio.Sound.createAsync(
       { uri: audioUri },
@@ -198,6 +174,71 @@ export default function VoiceScreen() {
 
   let Eicon = settingState ? deleteIcon : editIcon;
 
+  // audio record function
+  const [showAudio, setsShowAudio] = React.useState(false);
+  const [showSave, setSaveModal] = React.useState(false);
+
+  const [recording, setRecording] = React.useState();
+  const [audio, setAudio] = React.useState();
+
+  const _onLongPress = async () => {
+    try {
+      setsShowAudio(true);
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await recording.startAsync();
+      setRecording(recording);
+      console.log("Recording Start");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  React.useEffect(() => {
+    (async () => {
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+    })();
+  }, []);
+
+  const _onPressout = async () => {
+    try {
+      if (!!recording) {
+        console.log("Stopping recording..");
+        setsShowAudio(false);
+        setRecording(undefined);
+        await recording.stopAndUnloadAsync();
+        const uri = recording.getURI();
+        setAudio({
+          uri: { uri },
+        });
+        console.log(uri);
+      }
+    } catch (err) {
+      console.error("error from stop recordint" + err);
+    }
+  };
+
+  const saveAudio = () => {
+    //TODO: SAVE
+    console.log("save");
+    setSaveModal(false);
+  };
+
+  const unshowSave = () => {
+    setSaveModal(false);
+  };
+
+  const checkTime = (time, elapsedTime) => {
+    if (time == 0 && !!recording) {
+      _onPressout();
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {Eicon}
@@ -210,21 +251,22 @@ export default function VoiceScreen() {
           keyExtractor={(item) => item.id.toString()}
         />
       </View>
-      <Pressable
-        style={{ width: "100%" }}
-        onLongPress={_onLongPress}
-        onPressOut={_onPressOut}
-      >
-        <View style={styles.recordButton}>
-          <MaterialCommunityIcons
-            name="microphone-plus"
-            size={28}
-          ></MaterialCommunityIcons>
-        </View>
-      </Pressable>
-      <Pressable onPress={playAudio}>
-        <Text>Play</Text>
-      </Pressable>
+      <>
+        <AudioRecorder
+          recording={!!recording}
+          _onLongPress={_onLongPress}
+          _onPressout={_onPressout}
+          showModal={showAudio}
+          _onModalHide={() => {
+            setSaveModal(true);
+          }}
+        ></AudioRecorder>
+        <SaveModal
+          isVisible={showSave}
+          saveEvent={saveAudio}
+          toggle={unshowSave}
+        ></SaveModal>
+      </>
     </SafeAreaView>
   );
 }
@@ -300,5 +342,26 @@ const styles = StyleSheet.create({
   },
   editTool: {
     flexDirection: "column",
+  },
+  ecordButton: {
+    backgroundColor: "#D5E3EC",
+    marginBottom: 20,
+    borderRadius: 10,
+    paddingVertical: 5,
+    justifyContent: "center",
+    width: "80%",
+    alignSelf: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  modalContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textBox: {
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 30,
+    marginTop: 50,
   },
 });
