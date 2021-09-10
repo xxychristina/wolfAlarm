@@ -18,7 +18,12 @@ export default function Profile({ user, isVisible, toggle }) {
 
   const save = () => {
     let userId = firebase.auth().currentUser.uid;
-    updateUserProfile(userId, newUserInfo.name, newUserInfo.phone, newAvatar);
+    let loaded = updateUserProfile(
+      userId,
+      newUserInfo.name,
+      newUserInfo.phone,
+      newAvatar
+    );
   };
 
   const AvatarChangeHandler = async () => {
@@ -46,10 +51,11 @@ export default function Profile({ user, isVisible, toggle }) {
     setNewUserInfo((prevState) => ({ ...prevState, phone: newPhone }));
   };
 
-  const changeButton = 
-  <View>
-    <Button type="outline" title="change"></Button>
-  </View>
+  const changeButton = (
+    <View>
+      <Button type="outline" title="change"></Button>
+    </View>
+  );
 
   return (
     <Modal isVisible={isVisible}>
@@ -71,14 +77,13 @@ export default function Profile({ user, isVisible, toggle }) {
         ></Input>
         {/* TODO: change phone */}
         <Input
-          label='phone'
+          label="phone"
           editable={false}
           rightIcon={changeButton}
           defaultValue={user.phone}
           placeholderTextColor="#000"
-          >
-        </Input>
-        <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
+        ></Input>
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <View>
             <Button type="clear" title="Cancle" onPress={toggle}></Button>
           </View>
