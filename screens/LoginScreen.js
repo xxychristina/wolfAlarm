@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import { AuthContext } from "../components/Context";
 import * as Animatable from "react-native-animatable";
@@ -45,92 +46,94 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <ImageBackground source={Welcome} style={styles.backgroundImg}>
-      <SafeAreaView style={styles.container}>
-        {isFocused && (
-          <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <Text style={styles.text_footer}>E-mail</Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="account-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                editable={true}
-                placeholder="Your email"
-                style={styles.textinput}
-                onChangeText={(email) => {
-                  setEmail(email);
-                }}
-              />
-            </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>
-              Password
-            </Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="lock-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                placeholder="Your password"
-                style={styles.textinput}
-                onChangeText={(password) => {
-                  setPassword(password);
-                }}
-                secureTextEntry={showPassword}
-              />
-              <TouchableOpacity onPress={ShowPasswordHandler}>
-                {showPassword ? (
-                  <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
-                    size={25}
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
-                    size={25}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                ForgotPasswordHandler();
-              }}
-            >
-              <Text style={{ color: "#009bd1", marginTop: 15 }}>
-                Forgot Password?
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null}>
+      <ImageBackground source={Welcome} style={styles.backgroundImg}>
+        <SafeAreaView style={styles.container}>
+          {isFocused && (
+            <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+              <Text style={styles.text_footer}>E-mail</Text>
+              <View style={styles.action}>
+                <MaterialCommunityIcons
+                  name="account-outline"
+                  color="#4A5C72"
+                  size={25}
+                />
+                <TextInput
+                  editable={true}
+                  placeholder="Your email"
+                  style={styles.textinput}
+                  onChangeText={(email) => {
+                    setEmail(email);
+                  }}
+                />
+              </View>
+              <Text style={[styles.text_footer, { marginTop: 20 }]}>
+                Password
               </Text>
-            </TouchableOpacity>
-            <View style={styles.buttonGrid}>
+              <View style={styles.action}>
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  color="#4A5C72"
+                  size={25}
+                />
+                <TextInput
+                  placeholder="Your password"
+                  style={styles.textinput}
+                  onChangeText={(password) => {
+                    setPassword(password);
+                  }}
+                  secureTextEntry={showPassword}
+                />
+                <TouchableOpacity onPress={ShowPasswordHandler}>
+                  {showPassword ? (
+                    <MaterialCommunityIcons
+                      name="eye-off"
+                      color="gray"
+                      size={25}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="eye"
+                      color="#4169e1"
+                      size={25}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
               <TouchableOpacity
-                style={styles.LoginButton}
                 onPress={() => {
-                  LoginHandler(email, password);
+                  ForgotPasswordHandler();
                 }}
               >
-                <Text style={[styles.buttonText, { color: "white" }]}>
-                  Login
+                <Text style={{ color: "#009bd1", marginTop: 15 }}>
+                  Forgot Password?
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.RegisterButton}
-                onPress={() => {
-                  RegisterHandler();
-                }}
-              >
-                <Text style={styles.buttonText}>Register</Text>
-              </TouchableOpacity>
-            </View>
-          </Animatable.View>
-        )}
-      </SafeAreaView>
-    </ImageBackground>
+              <View style={styles.buttonGrid}>
+                <TouchableOpacity
+                  style={styles.LoginButton}
+                  onPress={() => {
+                    LoginHandler(email, password);
+                  }}
+                >
+                  <Text style={[styles.buttonText, { color: "white" }]}>
+                    Login
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.RegisterButton}
+                  onPress={() => {
+                    RegisterHandler();
+                  }}
+                >
+                  <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
+              </View>
+            </Animatable.View>
+          )}
+        </SafeAreaView>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 

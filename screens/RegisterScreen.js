@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { AuthContext } from "../components/Context";
 import * as Animatable from "react-native-animatable";
@@ -53,33 +54,34 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <ImageBackground source={Welcome} style={styles.backgroundImg}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{
-          flexGrow: 1,
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        {isFocused && (
-          <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <Text style={styles.text_footer}>E-mail</Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="account-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                placeholder="Your email"
-                style={styles.textinput}
-                onChangeText={(email) => {
-                  setEmail(email);
-                }}
-              />
-            </View>
-            {/* <Text style={[styles.text_footer, { marginTop: 20 }]}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null}>
+      <ImageBackground source={Welcome} style={styles.backgroundImg}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{
+            flexGrow: 1,
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
+          {isFocused && (
+            <Animatable.View animation="fadeInUpBig" style={styles.footer}>
+              <Text style={styles.text_footer}>E-mail</Text>
+              <View style={styles.action}>
+                <MaterialCommunityIcons
+                  name="account-outline"
+                  color="#4A5C72"
+                  size={25}
+                />
+                <TextInput
+                  placeholder="Your email"
+                  style={styles.textinput}
+                  onChangeText={(email) => {
+                    setEmail(email);
+                  }}
+                />
+              </View>
+              {/* <Text style={[styles.text_footer, { marginTop: 20 }]}>
               Phone number
             </Text>
             <View style={styles.action}>
@@ -96,133 +98,137 @@ export default function RegisterScreen({ navigation }) {
                 }}
               />
             </View> */}
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>Name</Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="pencil-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                placeholder="Your name"
-                style={styles.textinput}
-                onChangeText={(name) => {
-                  setName(name);
-                }}
-              />
-            </View>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>
-              Password
-            </Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="lock-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                placeholder="Your password"
-                style={styles.textinput}
-                onChangeText={(password) => {
-                  setPassword(password);
-                }}
-                onBlur={() => {
-                  if (confirmPassword != null && confirmPassword != password) {
-                    setSamePassword(false);
-                  } else {
-                    setSamePassword(true);
-                  }
-                }}
-                secureTextEntry={showPassword}
-              />
-              <TouchableOpacity onPress={ShowPasswordHandler}>
-                {showPassword ? (
-                  <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
-                    size={25}
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
-                    size={25}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            <Text style={{ color: "red" }}>
-              Password should contain at least 6 characters
-            </Text>
-            <Text style={[styles.text_footer, { marginTop: 20 }]}>
-              Confirm Password
-            </Text>
-            <View style={styles.action}>
-              <MaterialCommunityIcons
-                name="lock-outline"
-                color="#4A5C72"
-                size={25}
-              />
-              <TextInput
-                placeholder="Confirm password"
-                style={styles.textinput}
-                onChangeText={(confirmPassword) => {
-                  setConfirmPassword(confirmPassword);
-                }}
-                onBlur={() => {
-                  if (confirmPassword != password) {
-                    setSamePassword(false);
-                  } else {
-                    setSamePassword(true);
-                  }
-                }}
-                secureTextEntry={showPassword}
-              />
-              <TouchableOpacity onPress={ShowPasswordHandler}>
-                {showPassword ? (
-                  <MaterialCommunityIcons
-                    name="eye-off"
-                    color="gray"
-                    size={25}
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="eye"
-                    color="#4169e1"
-                    size={25}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            {!samePassword && (
-              <Text style={{ color: "red" }}>Password not the same</Text>
-            )}
-            <View style={styles.buttonGrid}>
-              <TouchableOpacity
-                style={styles.RegisterButton}
-                onPress={() => {
-                  let userId = uuid.v4();
-                  console.log(password);
-                  RegisterHandler(userId, name, phone, email, null, password);
-                }}
-              >
-                <Text style={[styles.buttonText, { color: "white" }]}>
-                  Register
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.BackButton}
-                onPress={() => {
-                  BackHandler();
-                }}
-              >
-                <Text style={styles.buttonText}>Back</Text>
-              </TouchableOpacity>
-            </View>
-          </Animatable.View>
-        )}
-      </ScrollView>
-    </ImageBackground>
+              <Text style={[styles.text_footer, { marginTop: 20 }]}>Name</Text>
+              <View style={styles.action}>
+                <MaterialCommunityIcons
+                  name="pencil-outline"
+                  color="#4A5C72"
+                  size={25}
+                />
+                <TextInput
+                  placeholder="Your name"
+                  style={styles.textinput}
+                  onChangeText={(name) => {
+                    setName(name);
+                  }}
+                />
+              </View>
+              <Text style={[styles.text_footer, { marginTop: 20 }]}>
+                Password
+              </Text>
+              <View style={styles.action}>
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  color="#4A5C72"
+                  size={25}
+                />
+                <TextInput
+                  placeholder="Your password"
+                  style={styles.textinput}
+                  onChangeText={(password) => {
+                    setPassword(password);
+                  }}
+                  onBlur={() => {
+                    if (
+                      confirmPassword != null &&
+                      confirmPassword != password
+                    ) {
+                      setSamePassword(false);
+                    } else {
+                      setSamePassword(true);
+                    }
+                  }}
+                  secureTextEntry={showPassword}
+                />
+                <TouchableOpacity onPress={ShowPasswordHandler}>
+                  {showPassword ? (
+                    <MaterialCommunityIcons
+                      name="eye-off"
+                      color="gray"
+                      size={25}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="eye"
+                      color="#4169e1"
+                      size={25}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+              <Text style={{ color: "red" }}>
+                Password should contain at least 6 characters
+              </Text>
+              <Text style={[styles.text_footer, { marginTop: 20 }]}>
+                Confirm Password
+              </Text>
+              <View style={styles.action}>
+                <MaterialCommunityIcons
+                  name="lock-outline"
+                  color="#4A5C72"
+                  size={25}
+                />
+                <TextInput
+                  placeholder="Confirm password"
+                  style={styles.textinput}
+                  onChangeText={(confirmPassword) => {
+                    setConfirmPassword(confirmPassword);
+                  }}
+                  onBlur={() => {
+                    if (confirmPassword != password) {
+                      setSamePassword(false);
+                    } else {
+                      setSamePassword(true);
+                    }
+                  }}
+                  secureTextEntry={showPassword}
+                />
+                <TouchableOpacity onPress={ShowPasswordHandler}>
+                  {showPassword ? (
+                    <MaterialCommunityIcons
+                      name="eye-off"
+                      color="gray"
+                      size={25}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="eye"
+                      color="#4169e1"
+                      size={25}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+              {!samePassword && (
+                <Text style={{ color: "red" }}>Password not the same</Text>
+              )}
+              <View style={styles.buttonGrid}>
+                <TouchableOpacity
+                  style={styles.RegisterButton}
+                  onPress={() => {
+                    let userId = uuid.v4();
+                    console.log(password);
+                    RegisterHandler(userId, name, phone, email, null, password);
+                  }}
+                >
+                  <Text style={[styles.buttonText, { color: "white" }]}>
+                    Register
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.BackButton}
+                  onPress={() => {
+                    BackHandler();
+                  }}
+                >
+                  <Text style={styles.buttonText}>Back</Text>
+                </TouchableOpacity>
+              </View>
+            </Animatable.View>
+          )}
+        </ScrollView>
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 

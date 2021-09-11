@@ -10,16 +10,15 @@ import {
   FlatList,
   ScrollView,
   Pressable,
-  Animated
+  Animated,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Value } from "react-native-reanimated";
 import AudioRecorder from "../components/AudioRecorder";
 import SaveModal from "../components/SaveModal";
 import { Audio } from "expo-av";
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import Modal from 'react-native-modal'
-
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import Modal from "react-native-modal";
 
 export default function VoiceScreen() {
   const DATA = [
@@ -60,7 +59,7 @@ export default function VoiceScreen() {
     //   title: "Third Item",
     // },
     // {
-      
+
     //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba2",
     //   title: "First Item",
     // },
@@ -84,24 +83,35 @@ export default function VoiceScreen() {
   const [settingState, setSettingState] = React.useState(false);
 
   var newData = DATA;
+  var audioUri = 0;
 
   let handleClick = (id) => {
     // console.log(id);
     let selected = newData.map((val, i) => {
-      if(val.id == id) {
-        if(val.isSelected == null || val.isSelected == false){
-          return{...val, isSelected: true};
-        }else{
-          return{...val, isSelected: false};
+      if (val.id == id) {
+        if (val.isSelected == null || val.isSelected == false) {
+          return { ...val, isSelected: true };
+        } else {
+          return { ...val, isSelected: false };
         }
-      }else{
+      } else {
         return val;
       }
-    })
+    });
     newData = selected;
-    console.log(newData)
-  }
+    console.log(newData);
+  };
 
+  const playAudio = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: audioUri },
+      { shouldPlay: false }.uri
+    );
+    setSound(sound);
+    setPlaying(true);
+    console.log("Playing Sound");
+    await sound.playAsync();
+  };
 
   let Item = ({ title, index, id }) => (
     <View style={settingState ? styles.listItemC : styles.listItem}>
@@ -164,72 +174,70 @@ export default function VoiceScreen() {
 
   let Eicon = settingState ? deleteIcon : editIcon;
 
-
-
   // audio record function
-  const [showAudio, setsShowAudio] = React.useState(false); 
+  const [showAudio, setsShowAudio] = React.useState(false);
   const [showSave, setSaveModal] = React.useState(false);
 
   const [recording, setRecording] = React.useState();
   const [audio, setAudio] = React.useState();
 
-
   const _onLongPress = async () => {
-    try{
+    try {
       setsShowAudio(true);
       const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
+      await recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
       await recording.startAsync();
       setRecording(recording);
       console.log("Recording Start");
     } catch (err) {
       console.error(err);
     }
-  }
+  };
   React.useEffect(() => {
     (async () => {
-        await Audio.requestPermissionsAsync();
-        await Audio.setAudioModeAsync({
-            allowsRecordingIOS: true,
-            playsInSilentModeIOS: true
-        })
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
     })();
-  }, [])
+  }, []);
 
   const _onPressout = async () => {
-    try{
-      if(!!recording){
-        console.log('Stopping recording..');
+    try {
+      if (!!recording) {
+        console.log("Stopping recording..");
         setsShowAudio(false);
         setRecording(undefined);
         await recording.stopAndUnloadAsync();
         const uri = recording.getURI();
         setAudio({
-          uri: {uri},
-        })
-        console.log(uri)
+          uri: { uri },
+        });
+        console.log(uri);
       }
-    } catch(err) {
-      console.error("error from stop recordint" + err)
+    } catch (err) {
+      console.error("error from stop recordint" + err);
     }
-  }
-
+  };
 
   const saveAudio = () => {
     //TODO: SAVE
-    console.log("save")
-    setSaveModal(false)
-  }
+    console.log("save");
+    setSaveModal(false);
+  };
 
   const unshowSave = () => {
-    setSaveModal(false)
-  }
+    setSaveModal(false);
+  };
 
   const checkTime = (time, elapsedTime) => {
     if (time == 0 && !!recording) {
       _onPressout();
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -238,14 +246,26 @@ export default function VoiceScreen() {
         <FlatList
           data={DATA}
           renderItem={({ item, index }) => (
-            <Item title={item.title} index={index + 1} id={item.id}/>
+            <Item title={item.title} index={index + 1} id={item.id} />
           )}
           keyExtractor={(item) => item.id.toString()}
         />
       </View>
       <>
-        <AudioRecorder recording={!!recording} _onLongPress={_onLongPress} _onPressout={_onPressout} showModal={showAudio} _onModalHide={()=> {setSaveModal(true)}}></AudioRecorder>
-        <SaveModal isVisible={showSave} saveEvent={saveAudio} toggle={unshowSave}></SaveModal>
+        <AudioRecorder
+          recording={!!recording}
+          _onLongPress={_onLongPress}
+          _onPressout={_onPressout}
+          showModal={showAudio}
+          _onModalHide={() => {
+            setSaveModal(true);
+          }}
+        ></AudioRecorder>
+        <SaveModal
+          isVisible={showSave}
+          saveEvent={saveAudio}
+          toggle={unshowSave}
+        ></SaveModal>
       </>
     </SafeAreaView>
   );
@@ -336,12 +356,12 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flexDirection: "column",
-    alignItems: 'center',
+    alignItems: "center",
   },
   textBox: {
     borderRadius: 20,
     paddingVertical: 20,
     paddingHorizontal: 30,
     marginTop: 50,
-  }
+  },
 });

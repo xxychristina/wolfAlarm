@@ -110,9 +110,10 @@ export default function MeScreen({ navigation }) {
             ) : (
               <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
                 <MaterialCommunityIcons
-                  name="circle-edit-outline"
+                  name="chevron-right"
                   color="#4A5C72"
-                  size={26}
+                  size={30}
+                  style={{ marginRight: 15 }}
                 ></MaterialCommunityIcons>
               </TouchableOpacity>
             )}

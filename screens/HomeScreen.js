@@ -1,8 +1,9 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native";
+import { Audio } from "expo-av";
 // import Torch from "react-native-torch";
 // import RNImmediatePhoneCall from "react-native-immediate-phone-call";
 // import AudioRecord from "react-native-audio-record";
@@ -15,12 +16,29 @@ const options = {
   wavFile: "test.wav", // default 'audio.wav'
 };
 
+const sound = new Audio.Sound();
+sound.loadAsync(require("../sound/alarm.mp3"));
 export default function HomeScreen({ navigation }) {
+  const [alarmPlaying, setAlarmPlaying] = useState(false);
   const SOSPressHandler = () => {
+    console.log("Total height = " + Dimensions.get("window").height);
+    console.log("Reminding area = " + Dimensions.get("window").height * 0.25);
+    console.log((Dimensions.get("window").height * 0.25) / 20);
     // TODO: Complete the SOS function
   };
-  const AFPressHandler = () => {
+  const AFPressHandler = async () => {
     // TODO: Complete the alarm and flash function
+    if (alarmPlaying) {
+      console.log("Stop");
+      await sound.pauseAsync();
+      setAlarmPlaying(false);
+    } else {
+      setAlarmPlaying(true);
+      console.log("Playing sound");
+      sound.setIsLoopingAsync(true);
+      sound.setVolumeAsync(1);
+      await sound.playAsync();
+    }
   };
   const VoicePressHandler = () => {
     navigation.navigate("Voice");
@@ -32,24 +50,26 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <MapView style={styles.map} />
-      <View style={styles.buttonGrid}>
-        <TouchableOpacity style={styles.button} onPress={SOSPressHandler}>
-          <Text style={styles.buttonText}>SOS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Alarm/Flash</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonGrid}>
-        <TouchableOpacity style={styles.button} onPress={VoicePressHandler}>
-          <Text style={styles.buttonText}>Voice</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={VirtualCallPressHandler}
-        >
-          <Text style={styles.buttonText}>Virtual Call</Text>
-        </TouchableOpacity>
+      <View style={styles.grid}>
+        <View style={styles.buttonGrid}>
+          <TouchableOpacity style={styles.button} onPress={SOSPressHandler}>
+            <Text style={styles.buttonText}>SOS</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={AFPressHandler}>
+            <Text style={styles.buttonText}>Alarm/Flash</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.buttonGrid]}>
+          <TouchableOpacity style={styles.button} onPress={VoicePressHandler}>
+            <Text style={styles.buttonText}>Voice</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={VirtualCallPressHandler}
+          >
+            <Text style={styles.buttonText}>Virtual Call</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -57,6 +77,7 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: "column",
     backgroundColor: "#f8f8f8",
     alignItems: "center",
@@ -79,6 +100,7 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 13 },
     marginHorizontal: 20,
+    justifyContent: "center",
   },
 
   buttonText: {
@@ -87,8 +109,15 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
 
+  grid: {
+    justifyContent: "space-around",
+  },
+
   buttonGrid: {
     flexDirection: "row",
-    marginVertical: 10,
+    width: "100%",
+    margin: (Dimensions.get("window").height * 0.25) / 20,
+    // flexGrow: 1,
+    // marginTop: 20,
   },
 });
