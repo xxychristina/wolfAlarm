@@ -17,8 +17,9 @@ import { Value } from "react-native-reanimated";
 import AudioRecorder from "../components/AudioRecorder";
 import SaveModal from "../components/SaveModal";
 import { Audio } from "expo-av";
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import Modal from "react-native-modal";
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import Modal from 'react-native-modal';
+import firebase from "firebase";
 
 export default function VoiceScreen() {
   const DATA = [
@@ -81,9 +82,31 @@ export default function VoiceScreen() {
     // },
   ];
   const [settingState, setSettingState] = React.useState(false);
+  const [voiceList, setVoiceList] = React.useState();
+  const [sound, setSound] = React.useState();
+
 
   var newData = DATA;
-  var audioUri = 0;
+  
+  const getVoiceList = async () => {
+    let userId = firebase.auth().currentUser.uid;
+    var vList = []
+    const snapshot =  await firebase
+          .firestore()
+          .collection('users')
+          .doc(userId)
+          .collection('voices')
+          .get()
+    
+    snapshot.forEach((doc) => {
+      vList.push(doc.data())
+    });
+    setVoiceList(vList)
+  }
+
+ React.useEffect(()=> {
+    getVoiceList()
+  }, [])
 
   let handleClick = (id) => {
     // console.log(id);
@@ -102,23 +125,22 @@ export default function VoiceScreen() {
     console.log(newData);
   };
 
-  const playAudio = async () => {
+  const playAudio = async (uri) => {
     const { sound } = await Audio.Sound.createAsync(
-      { uri: audioUri },
-      { shouldPlay: false }.uri
+      { uri: uri },
     );
-    setSound(sound);
-    setPlaying(true);
-    console.log("Playing Sound");
+    setSound(sound)
+    console.log('Playing Sound');
     await sound.playAsync();
-  };
+  }
+
 
   let Item = ({ title, index, id }) => (
     <View style={settingState ? styles.listItemC : styles.listItem}>
       <View style={styles.dot}>
         <Text style={{ textAlign: "center" }}>{index}. </Text>
       </View>
-      <TouchableOpacity style={styles.voiceButton}>
+      <TouchableOpacity style={styles.voiceButton} onPress={()=>{playAudio(id)}}>
         <Text style={styles.title}>{title}</Text>
       </TouchableOpacity>
       <BouncyCheckbox
@@ -179,7 +201,9 @@ export default function VoiceScreen() {
   const [showSave, setSaveModal] = React.useState(false);
 
   const [recording, setRecording] = React.useState();
-  const [audio, setAudio] = React.useState();
+  const [audioLink, setAudioLink] = React.useState();
+  const [note, setNote] = React.useState();
+
 
   const _onLongPress = async () => {
     try {
@@ -197,13 +221,14 @@ export default function VoiceScreen() {
   };
   React.useEffect(() => {
     (async () => {
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
+        await Audio.requestPermissionsAsync();
+        await Audio.setAudioModeAsync({
+            allowsRecordingIOS: true,
+            playsInSilentModeIOS: true
+        });
     })();
   }, []);
+
 
   const _onPressout = async () => {
     try {
@@ -213,25 +238,48 @@ export default function VoiceScreen() {
         setRecording(undefined);
         await recording.stopAndUnloadAsync();
         const uri = recording.getURI();
-        setAudio({
-          uri: { uri },
-        });
-        console.log(uri);
+        setAudioLink(uri)
+        console.log(uri)
       }
     } catch (err) {
       console.error("error from stop recordint" + err);
     }
-  };
+  }
+
+  const voice = React.useMemo(()=> ({
+    add: (firebaseID, voice) => {
+      firebase
+      .firestore()
+      .collection('users')
+      .doc(firebaseID)
+      .collection('voices')
+      .add(voice)
+      .then(()=> (console.log("add voice!")))
+    },
+  }))
 
   const saveAudio = () => {
     //TODO: SAVE
-    console.log("save");
-    setSaveModal(false);
-  };
+    let userId = firebase.auth().currentUser.uid;
+    const audio = {
+      uri: audioLink,
+      note: note
+    }
+    voice.add(userId, audio)
+    setSaveModal(false)
+    setAudioLink(null)
+    setNote(null)
+    console.log("save")
+    getVoiceList()
+  }
 
   const unshowSave = () => {
     setSaveModal(false);
   };
+
+  const saveNote = (note) => {
+    setNote(note)
+  }
 
   const checkTime = (time, elapsedTime) => {
     if (time == 0 && !!recording) {
@@ -244,28 +292,16 @@ export default function VoiceScreen() {
       {Eicon}
       <View style={styles.list}>
         <FlatList
-          data={DATA}
+          data={voiceList}
           renderItem={({ item, index }) => (
-            <Item title={item.title} index={index + 1} id={item.id} />
+            <Item title={item.note} index={index + 1} id={item.uri}/>
           )}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.uri.toString()}
         />
       </View>
       <>
-        <AudioRecorder
-          recording={!!recording}
-          _onLongPress={_onLongPress}
-          _onPressout={_onPressout}
-          showModal={showAudio}
-          _onModalHide={() => {
-            setSaveModal(true);
-          }}
-        ></AudioRecorder>
-        <SaveModal
-          isVisible={showSave}
-          saveEvent={saveAudio}
-          toggle={unshowSave}
-        ></SaveModal>
+        <AudioRecorder recording={!!recording} _onLongPress={_onLongPress} _onPressout={_onPressout} showModal={showAudio} _onModalHide={()=> {setSaveModal(true)}}></AudioRecorder>
+        <SaveModal isVisible={showSave} saveEvent={saveAudio} toggle={unshowSave} setNote={setNote}></SaveModal>
       </>
     </SafeAreaView>
   );
