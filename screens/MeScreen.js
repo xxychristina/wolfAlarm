@@ -86,14 +86,6 @@ export default function MeScreen({ navigation }) {
         >
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
-<<<<<<< HEAD
-        <Profile
-          user={userInfo}
-          isVisible={isEditing}
-          toggle={EditHandler}
-        ></Profile>
-          <TouchableOpacity onPress={EditHandler} style={styles.editButton}>
-=======
       ) : (
         <SafeAreaView style={styles.container}>
           <View style={styles.profile}>
@@ -134,7 +126,6 @@ export default function MeScreen({ navigation }) {
               ></MaterialCommunityIcons>
               <Text style={styles.emergencyContactText}>Emergency Contact</Text>
             </View>
->>>>>>> 3bb0d1035628ce7169142c6fea957cbc0ee14233
             <MaterialCommunityIcons
               name="chevron-right"
               color="#4A5C72"
@@ -142,58 +133,6 @@ export default function MeScreen({ navigation }) {
               style={{ marginRight: 15 }}
             ></MaterialCommunityIcons>
           </TouchableOpacity>
-<<<<<<< HEAD
-      </View>
-      <TouchableOpacity style={styles.navigateTabs} onPress={EChandler}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name="cellphone-iphone"
-            color="#4A5C72"
-            size={36}
-          ></MaterialCommunityIcons>
-          <Text style={styles.emergencyContactText}>Emergency Contact</Text>
-        </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          color="#4A5C72"
-          size={30}
-          style={{ marginRight: 15 }}
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navigateTabs} onPress={HelpHandler}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name="help-circle-outline"
-            color="#4A5C72"
-            size={36}
-          ></MaterialCommunityIcons>
-          <Text style={styles.helpContactText}>Help</Text>
-        </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          color="#4A5C72"
-          size={30}
-          style={{ marginRight: 15 }}
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navigateTabs} onPress={SignOutHandler}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <MaterialCommunityIcons
-            name="exit-to-app"
-            color="#4A5C72"
-            size={36}
-          ></MaterialCommunityIcons>
-          <Text style={styles.helpContactText}>Sign Out</Text>
-        </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          color="#4A5C72"
-          size={30}
-          style={{ marginRight: 15 }}
-        ></MaterialCommunityIcons>
-      </TouchableOpacity>
-    </SafeAreaView>
-=======
           <TouchableOpacity style={styles.navigateTabs} onPress={HelpHandler}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <MaterialCommunityIcons
@@ -232,7 +171,6 @@ export default function MeScreen({ navigation }) {
         </SafeAreaView>
       )}
     </View>
->>>>>>> 3bb0d1035628ce7169142c6fea957cbc0ee14233
   );
 }
 
