@@ -6,87 +6,18 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Button,
   FlatList,
-  ScrollView,
-  Pressable,
-  Animated,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { Value } from "react-native-reanimated";
 import AudioRecorder from "../components/AudioRecorder";
 import SaveModal from "../components/SaveModal";
 import { Audio } from "expo-av";
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import Modal from 'react-native-modal';
 import firebase from "firebase";
 
 export default function VoiceScreen() {
-  const DATA = [
-    {
-      id: "1",
-      title: "First Item",
-    },
-    {
-      id: "2",
-      title: "Second Item",
-    },
-    {
-      id: "3",
-      title: "Third Item",
-    },
-    // {
-    //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba67",
-    //   title: "First Item",
-    // },
-    // {
-    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6365",
-    //   title: "Second Item",
-    // },
-    // {
-    //   id: "58694a0f-3da1-471f-bd96-145571e29d72654",
-    //   title: "Third Item",
-    // },
-    // {
-    //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba21",
-    //   title: "First Item",
-    // },
-    // {
-    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63435",
-    //   title: "Second Item",
-    // },
-    // {
-    //   id: "58694a0f-3da1-471f-bd96-145571e29d7245",
-    //   title: "Third Item",
-    // },
-    // {
-
-    //   id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba2",
-    //   title: "First Item",
-    // },
-    // {
-    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6343",
-    //   title: "Second Item",
-    // },
-    // {
-    //   id: "58694a0f-3da1-471f-bd96-145571e29d724",
-    //   title: "Third Item",
-    // },
-    // {
-    //   id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f6343h",
-    //   title: "Second Item",
-    // },
-    // {
-    //   id: "58694a0f-3da1-471f-bd96-145571e29d724h",
-    //   title: "Third Item",
-    // },
-  ];
   const [settingState, setSettingState] = React.useState(false);
   const [voiceList, setVoiceList] = React.useState();
   const [sound, setSound] = React.useState();
-
-
-  var newData = DATA;
   
   const getVoiceList = async () => {
     let userId = firebase.auth().currentUser.uid;
@@ -199,12 +130,15 @@ export default function VoiceScreen() {
   // audio record function
   const [showAudio, setsShowAudio] = React.useState(false);
   const [showSave, setSaveModal] = React.useState(false);
-
+  
   const [recording, setRecording] = React.useState();
   const [audioLink, setAudioLink] = React.useState();
   const [note, setNote] = React.useState();
-
-
+  
+  const unshowSave = () => {
+    setSaveModal(false);
+  };
+  
   const _onLongPress = async () => {
     try {
       setsShowAudio(true);
@@ -246,6 +180,7 @@ export default function VoiceScreen() {
     }
   }
 
+  //firebase interface
   const voice = React.useMemo(()=> ({
     add: (firebaseID, voice) => {
       firebase
@@ -258,6 +193,7 @@ export default function VoiceScreen() {
     },
   }))
 
+  //upload audio
   const saveAudio = () => {
     //TODO: SAVE
     let userId = firebase.auth().currentUser.uid;
@@ -273,19 +209,6 @@ export default function VoiceScreen() {
     getVoiceList()
   }
 
-  const unshowSave = () => {
-    setSaveModal(false);
-  };
-
-  const saveNote = (note) => {
-    setNote(note)
-  }
-
-  const checkTime = (time, elapsedTime) => {
-    if (time == 0 && !!recording) {
-      _onPressout();
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -311,8 +234,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     flex: 1,
-    // justifyContent: "center",
-    // alignContent: "center"
   },
   list: {
     flexDirection: "column",
@@ -320,7 +241,6 @@ const styles = StyleSheet.create({
     height: "85%",
     marginBottom: 10,
     marginLeft: 10,
-    // flex:1
   },
   listItem: {
     flexDirection: "row",
