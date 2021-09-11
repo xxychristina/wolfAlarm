@@ -3,7 +3,7 @@ import { View, TextInput } from 'react-native';
 import Modal from 'react-native-modal'
 import { Button } from 'react-native-elements';
 
-export default function SaveModal({isVisible, saveEvent, toggle}) {
+export default function SaveModal({isVisible, saveEvent, toggle, setNote}) {
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.modalContainer}>
@@ -16,6 +16,9 @@ export default function SaveModal({isVisible, saveEvent, toggle}) {
             alignSelf: "center"
           }}
           placeholder="under 20 characters"
+          onChangeText={(note) => {
+            setNote(note);
+          }}
         >
         </TextInput>
         <View style={styles.buttonGrid}>
