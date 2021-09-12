@@ -11,13 +11,16 @@ import {
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import AudioRecorder from "../components/AudioRecorder";
 import SaveModal from "../components/SaveModal";
+import DeleteConfirm from "../components/DeleteConfirm";
 import { Audio } from "expo-av";
 import firebase from "firebase";
 
 export default function VoiceScreen() {
   const [settingState, setSettingState] = React.useState(false);
   const [voiceList, setVoiceList] = React.useState();
+  const [helpList, setHelpList] = React.useState();
   const [sound, setSound] = React.useState();
+  const [deleteModal, setDeleteModal] = React.useState(false)
   
   const getVoiceList = async () => {
     let userId = firebase.auth().currentUser.uid;
@@ -27,21 +30,31 @@ export default function VoiceScreen() {
           .collection('users')
           .doc(userId)
           .collection('voices')
+          .orderBy('date', 'asc')
           .get()
+          .catch((err) => console.error(err))
     
     snapshot.forEach((doc) => {
-      vList.push(doc.data())
+      vList.push({...doc.data(), id: doc.id})
     });
     setVoiceList(vList)
+    setHelpList(vList)
   }
 
  React.useEffect(()=> {
     getVoiceList()
   }, [])
 
-  let handleClick = (id) => {
+  const handleClick = (id) => {
     // console.log(id);
-    let selected = newData.map((val, i) => {
+    // console.log(helpList)
+    var tmpList;
+    if(!!helpList){
+      tmpList = helpList;
+    }else{
+      tmpList = voiceList;
+    }
+    let selected = tmpList.map((val, i) => {
       if (val.id == id) {
         if (val.isSelected == null || val.isSelected == false) {
           return { ...val, isSelected: true };
@@ -52,8 +65,7 @@ export default function VoiceScreen() {
         return val;
       }
     });
-    newData = selected;
-    console.log(newData);
+    setHelpList(selected)
   };
 
   const playAudio = async (uri) => {
@@ -66,12 +78,12 @@ export default function VoiceScreen() {
   }
 
 
-  let Item = ({ title, index, id }) => (
+  let Item = ({ title, index, id, isChecked, uri }) => (
     <View style={settingState ? styles.listItemC : styles.listItem}>
       <View style={styles.dot}>
         <Text style={{ textAlign: "center" }}>{index}. </Text>
       </View>
-      <TouchableOpacity style={styles.voiceButton} onPress={()=>{playAudio(id)}}>
+      <TouchableOpacity style={styles.voiceButton} onPress={()=>{playAudio(uri)}}>
         <Text style={styles.title}>{title}</Text>
       </TouchableOpacity>
       <BouncyCheckbox
@@ -79,6 +91,7 @@ export default function VoiceScreen() {
         fillColor="#D9AEA8"
         unfillColor="#FFFFFF"
         iconStyle={{ borderColor: "#D9AEA8" }}
+        isChecked={isChecked}
         style={
           settingState
             ? { display: "flex", marginLeft: 5 }
@@ -120,6 +133,7 @@ export default function VoiceScreen() {
         size={26}
         onPress={() => {
           setSettingState(!settingState);
+          setDeleteModal(!deleteModal)
         }}
       ></MaterialCommunityIcons>
     </TouchableOpacity>
@@ -189,24 +203,52 @@ export default function VoiceScreen() {
       .doc(firebaseID)
       .collection('voices')
       .add(voice)
-      .then(()=> (console.log("add voice!")))
+      .then(()=> {
+        setSaveModal(false)
+        setAudioLink(null)
+        setNote(null)
+        console.log("add voice!")
+        getVoiceList()
+      })
+    },
+    delete: (firebaseID, voice) => {
+      firebase
+      .firestore()
+      .collection('users')
+      .doc(firebaseID)
+      .collection('voices')
+      .doc(voice.id)
+      .delete()
+      .then(() => {
+        console.log("delete")
+      })
     },
   }))
+
 
   //upload audio
   const saveAudio = () => {
     //TODO: SAVE
     let userId = firebase.auth().currentUser.uid;
+    let date = firebase.firestore.Timestamp.fromDate(new Date());
+
     const audio = {
       uri: audioLink,
-      note: note
+      note: note,
+      date: date
     }
     voice.add(userId, audio)
-    setSaveModal(false)
-    setAudioLink(null)
-    setNote(null)
-    console.log("save")
-    getVoiceList()
+  }
+
+  const deleteAudios = () => {
+    let uid = firebase.auth().currentUser.uid;
+    let selectedAudio = helpList.filter(audio => audio.isSelected)
+    let notSelected = helpList.filter(audio => !audio.isSelected)
+    for(let i = 0; i < selectedAudio.length; i++) {
+      voice.delete(uid, selectedAudio[i])
+    }
+    setHelpList(notSelected)
+    setDeleteModal(!deleteModal)
   }
 
 
@@ -215,16 +257,17 @@ export default function VoiceScreen() {
       {Eicon}
       <View style={styles.list}>
         <FlatList
-          data={voiceList}
+          data={helpList}
           renderItem={({ item, index }) => (
-            <Item title={item.note} index={index + 1} id={item.uri}/>
+            <Item title={item.note} index={index + 1} id={item.id} isChecked={item.isSelected} uri={item.uri}/>
           )}
-          keyExtractor={(item) => item.uri.toString()}
+          keyExtractor={(item) => item.id.toString()}
         />
       </View>
       <>
         <AudioRecorder recording={!!recording} _onLongPress={_onLongPress} _onPressout={_onPressout} showModal={showAudio} _onModalHide={()=> {setSaveModal(true)}}></AudioRecorder>
         <SaveModal isVisible={showSave} saveEvent={saveAudio} toggle={unshowSave} setNote={setNote}></SaveModal>
+        <DeleteConfirm isVisible={deleteModal} deleteEvent={deleteAudios} toggle={() => {setDeleteModal(!deleteModal)}}></DeleteConfirm>
       </>
     </SafeAreaView>
   );
