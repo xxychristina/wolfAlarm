@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, Text } from "react-native";
 export default function SOSScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>SOS</Text>
+      <Text style={styles.text}>up comming</Text>
     </SafeAreaView>
   );
 }
