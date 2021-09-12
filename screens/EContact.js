@@ -22,7 +22,7 @@ export default function EContact({ navigation }) {
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState(0);
   const [inviteEmail, setInviteEmail] = React.useState(null);
-  const [Contacts, setContacts] = React.useState(null);
+  const [newContacts, setNewContacts] = React.useState(null);
 
   const currentUser = firebase.auth().currentUser;
 
@@ -52,9 +52,7 @@ export default function EContact({ navigation }) {
             alert("User not found");
           } else {
             snapshot.docs.forEach((doc) => {
-              // console.log(doc.data().email);
               addEContact(doc.id);
-              // addEContact(doc.id);
             });
           }
         });
@@ -79,7 +77,6 @@ export default function EContact({ navigation }) {
             .collection("Emergency Contacts")
             .doc(userId)
             .set({ userId });
-          // .set(EContact);
           alert("User added as emergency contact");
         } else {
           alert("You already have this user as emergency contact");
@@ -98,29 +95,33 @@ export default function EContact({ navigation }) {
       .get()
       .then((collectionSnapshot) => {
         collectionSnapshot.forEach((documentSnapshot) => {
-          uidList.push({ ...documentSnapshot.data()});
+          uidList.push({ ...documentSnapshot.data() });
         });
       });
-    
-    await Promise.all(uidList.map(async (object) => {
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(object.userId)
-        .get()
-        .then((snapshot) => {
-          contactList.push({
-            ...snapshot.data(),
-            uid: object.userId,
+
+    await Promise.all(
+      uidList.map(async (object) => {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(object.userId)
+          .get()
+          .then((snapshot) => {
+            contactList.push({
+              ...snapshot.data(),
+              uid: object.userId,
+            });
           });
-        });
-    }))
-    setContacts(contactList);
+      })
+    );
+    setNewContacts(contactList);
   };
 
   useEffect(() => {
     getEContact();
   }, []);
+
+  const Contacts = React.useMemo(() => newContacts, [newContacts]);
 
   const DATA = [
     {
@@ -187,20 +188,6 @@ export default function EContact({ navigation }) {
       </View>
       <View>
         <FlatList
-          // data={DATA}
-          // keyExtractor={(item) => item.id.toString()}
-          // renderItem={({ item, index }) => (
-          //   <EmergencyContact
-          //     name={item.name}
-          //     phone={item.phone}
-          //     id={item.id}
-          //     deletePressHandler={function () {
-          //       setDeleteItem(item.id);
-          //       setDeleteModal(!deleteModal);
-          //     }}
-          //   ></EmergencyContact>
-          // )}
-
           data={Contacts}
           keyExtractor={(item) => item.uid.toString()}
           renderItem={({ item, index }) => (

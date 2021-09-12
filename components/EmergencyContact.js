@@ -15,16 +15,19 @@ export default function EmergencyContact({
   avatar,
   deletePressHandler,
 }) {
-  var hasAvatar = avatar != null ? true : false;
   return (
     <View style={styles.emergencyContact}>
-      {!hasAvatar ? (
+      {avatar === null ? (
         <View style={styles.profilePictureEmpty} />
       ) : (
         <Image source={{ uri: avatar }} style={styles.profilePicture} />
       )}
       <Text style={styles.emergencyContactName}>{name}</Text>
-      <Text style={styles.emergencyContactNumber}>{phone}</Text>
+      {phone === null ? (
+        <Text style={styles.emergencyContactNumber}>No phone</Text>
+      ) : (
+        <Text style={styles.emergencyContactNumber}>{phone}</Text>
+      )}
       <TouchableOpacity
         // TODO: add function
         onPress={deletePressHandler}
@@ -54,6 +57,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50 / 2,
+    marginBottom: 5,
   },
 
   emergencyContact: {
