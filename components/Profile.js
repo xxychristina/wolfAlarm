@@ -5,6 +5,7 @@ import { Input, Button } from "react-native-elements";
 import { AuthContext } from "../components/Context";
 import firebase from "firebase";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 export default function Profile({ user, isVisible, toggle }) {
   const [newUserInfo, setNewUserInfo] = useState({
@@ -12,12 +13,13 @@ export default function Profile({ user, isVisible, toggle }) {
     phone: user.phone,
   });
 
+  const userId = firebase.auth().currentUser.uid;
+
   const [newAvatar, setNewAvatar] = useState(user.avatar);
 
   const { updateUserProfile } = useContext(AuthContext);
 
   const save = () => {
-    let userId = firebase.auth().currentUser.uid;
     let loaded = updateUserProfile(
       userId,
       newUserInfo.name,
@@ -35,12 +37,34 @@ export default function Profile({ user, isVisible, toggle }) {
       return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
 
     if (pickerResult.cancelled === true) {
       return;
     }
-    setNewAvatar(pickerResult.uri);
+
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", pickerResult.uri, true);
+      xhr.send(null);
+    });
+
+    const ref = firebase.storage().ref(`avatar/${userId}`);
+    const snapshot = await ref.put(blob);
+    blob.close();
+    const downloadUrl = await snapshot.ref.getDownloadURL();
+    setNewAvatar(downloadUrl);
   };
 
   const NameChangeHandler = (newName) => {
