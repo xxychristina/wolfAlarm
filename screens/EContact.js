@@ -98,11 +98,11 @@ export default function EContact({ navigation }) {
       .get()
       .then((collectionSnapshot) => {
         collectionSnapshot.forEach((documentSnapshot) => {
-          uidList.push({ ...documentSnapshot.data() });
+          uidList.push({ ...documentSnapshot.data()});
         });
       });
-
-    uidList.map(async (object) => {
+    
+    await Promise.all(uidList.map(async (object) => {
       await firebase
         .firestore()
         .collection("users")
@@ -114,7 +114,7 @@ export default function EContact({ navigation }) {
             uid: object.userId,
           });
         });
-    });
+    }))
     setContacts(contactList);
   };
 
