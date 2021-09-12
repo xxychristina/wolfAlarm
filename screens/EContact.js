@@ -20,17 +20,14 @@ import firebase from "firebase";
 export default function EContact({ navigation }) {
   const [inviteModal, setInviteModal] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
-  const [deleteItem, setDeleteItem] = React.useState(0);
+  const [deleteItem, setDeleteItem] = React.useState(null);
   const [inviteEmail, setInviteEmail] = React.useState(null);
   const [newContacts, setNewContacts] = React.useState(null);
 
   const currentUser = firebase.auth().currentUser;
 
-  const handleDelete = () => {
-    if (deleteItem != 0) {
-      console.log(deleteItem);
-      setDeleteModal(!deleteModal);
-    }
+  const handleDelete = (deleteItem) => {
+    econtacts.delete(deleteItem);
   };
 
   const toggleInvite = () => {
@@ -52,36 +49,11 @@ export default function EContact({ navigation }) {
             alert("User not found");
           } else {
             snapshot.docs.forEach((doc) => {
-              addEContact(doc.id);
+              econtacts.add(doc.id);
             });
           }
         });
-      getEContact();
     }
-  };
-
-  const addEContact = (userId) => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .collection("Emergency Contacts")
-      .where("id", "==", userId)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.empty) {
-          firebase
-            .firestore()
-            .collection("users")
-            .doc(currentUser.uid)
-            .collection("Emergency Contacts")
-            .doc(userId)
-            .set({ userId });
-          alert("User added as emergency contact");
-        } else {
-          alert("You already have this user as emergency contact");
-        }
-      });
   };
 
   const getEContact = async () => {
@@ -122,24 +94,48 @@ export default function EContact({ navigation }) {
   }, []);
 
   const Contacts = React.useMemo(() => newContacts, [newContacts]);
-
-  const DATA = [
-    {
-      id: 1,
-      name: "William",
-      phone: "+61452230632",
+  const econtacts = React.useMemo(() => ({
+    add: async (userId) => {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("Emergency Contacts")
+        .where("id", "==", userId)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("Emergency Contacts")
+              .doc(userId)
+              .set({ userId });
+            alert("User added as emergency contact");
+          } else {
+            alert("You already have this user as emergency contact");
+          }
+        });
+      getEContact();
     },
-    {
-      id: 2,
-      name: "Chris",
-      phone: "+61452230632",
+    delete: async (deleteItem) => {
+      if (deleteItem != null) {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(currentUser.uid)
+          .collection("Emergency Contacts")
+          .doc(deleteItem)
+          .delete()
+          .then(() => {
+            console.log("delete");
+          });
+        setDeleteModal(!deleteModal);
+        getEContact();
+      }
     },
-    {
-      id: 3,
-      name: "Chris",
-      phone: "+61452230632",
-    },
-  ];
+  }));
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -188,7 +184,7 @@ export default function EContact({ navigation }) {
       </View>
       <View>
         <FlatList
-          data={Contacts}
+          data={newContacts}
           keyExtractor={(item) => item.uid.toString()}
           renderItem={({ item, index }) => (
             <EmergencyContact
@@ -203,13 +199,28 @@ export default function EContact({ navigation }) {
           )}
         ></FlatList>
       </View>
-      <DeleteConfirm
-        isVisible={deleteModal}
-        deleteEvent={handleDelete}
-        toggle={() => {
-          setDeleteModal(!deleteModal);
-        }}
-      ></DeleteConfirm>
+      <Modal isVisible={deleteModal}>
+        <View style={styles.deleteModalContainer}>
+          <View>
+            <Button
+              type="clear"
+              title="Cancle"
+              onPress={() => {
+                setDeleteModal(!deleteModal);
+              }}
+            ></Button>
+          </View>
+          <View>
+            <Button
+              type="clear"
+              title="Delete"
+              onPress={() => {
+                handleDelete(deleteItem);
+              }}
+            ></Button>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -239,6 +250,19 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 20,
+  },
+  deleteModalContainer: {
+    backgroundColor: "#ffffff",
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: "#000",
+    borderStyle: "solid",
+    flexDirection: "row",
+    width: "100%",
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    justifyContent: "space-around",
+    alignItems: "flex-end",
   },
   centerText: {
     // textAlign: "center",
