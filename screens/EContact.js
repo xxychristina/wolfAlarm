@@ -83,9 +83,9 @@ export default function EContact({ navigation }) {
       });
   };
 
-  const getEContact = () => {
+  const getEContact = async () => {
     const contactList = [];
-    firebase
+    await firebase
       .firestore()
       .collection("users")
       .doc(currentUser.uid)
