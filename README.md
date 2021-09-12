@@ -1,2 +1,4 @@
 # wolfAlarm
 Wolf Alarm is a safety application that will help users in the situation where they believe that they are being stalked. The voice feature allow user to play pre-recorded audio to fake conversations with another person with the chance of convincing the stalker that the user is not along and has someone nearby. The alarm feature will release a high pitch sound on press to scare away the stalker. Press again to stop the alarm. In future, the map will display not only user current location but also location of the listed emergency contacts, the SOS feature will message all the emergency contacts at once to indicate the user is facing threat and the virtual call feature will bring more realistic phone conversations to scare away the stalker. 
+
+App available with this link: https://expo.dev/@christinaxxy/wolfAlarmApp
