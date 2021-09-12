@@ -5,19 +5,24 @@ import {
   View,
   Text,
   TextInput,
+  Image,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function EmergencyContact({
   name,
   phone,
-  id,
+  avatar,
   deletePressHandler,
 }) {
-  console.log("This is name + " + name);
+  var hasAvatar = avatar != null ? true : false;
   return (
     <View style={styles.emergencyContact}>
-      <View style={styles.profilePicture}></View>
+      {!hasAvatar ? (
+        <View style={styles.profilePictureEmpty} />
+      ) : (
+        <Image source={{ uri: avatar }} style={styles.profilePicture} />
+      )}
       <Text style={styles.emergencyContactName}>{name}</Text>
       <Text style={styles.emergencyContactNumber}>{phone}</Text>
       <TouchableOpacity
@@ -37,12 +42,18 @@ export default function EmergencyContact({
 }
 
 const styles = StyleSheet.create({
-  profilePicture: {
+  profilePictureEmpty: {
     width: 50,
     height: 50,
     borderRadius: 50 / 2,
     backgroundColor: "#C4C4C4",
     marginBottom: 5,
+  },
+
+  profilePicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
   },
 
   emergencyContact: {

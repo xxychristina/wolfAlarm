@@ -52,15 +52,17 @@ export default function EContact({ navigation }) {
             alert("User not found");
           } else {
             snapshot.docs.forEach((doc) => {
-              addEContact(doc.id, doc.data());
+              // addEContact(doc.id, doc.data());
+              addEContact(doc.id);
             });
           }
         });
+      getEContact();
     }
   };
 
-  const addEContact = (userId, EContact) => {
-    firebase
+  const addEContact = async (userId, EContact) => {
+    await firebase
       .firestore()
       .collection("users")
       .doc(currentUser.uid)
@@ -75,7 +77,8 @@ export default function EContact({ navigation }) {
             .doc(currentUser.uid)
             .collection("Emergency Contacts")
             .doc(userId)
-            .set(EContact);
+            .set({ userId });
+          // .set(EContact);
           alert("User added as emergency contact");
         } else {
           alert("You already have this user as emergency contact");
@@ -84,6 +87,7 @@ export default function EContact({ navigation }) {
   };
 
   const getEContact = async () => {
+    const uidList = [];
     const contactList = [];
     await firebase
       .firestore()
@@ -93,18 +97,29 @@ export default function EContact({ navigation }) {
       .get()
       .then((collectionSnapshot) => {
         collectionSnapshot.forEach((documentSnapshot) => {
-          contactList.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+          uidList.push({ ...documentSnapshot.data() });
         });
       });
+    uidList.forEach((object) => {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(object.userId)
+        .get()
+        .then((snapshot) => {
+          contactList.push({
+            ...snapshot.data(),
+            uid: object.userId,
+          });
+        });
+    });
+
     setContacts(contactList);
   };
 
   useEffect(() => {
     getEContact();
-  }, []);
+  });
 
   const DATA = [
     {
@@ -186,14 +201,14 @@ export default function EContact({ navigation }) {
           // )}
 
           data={Contacts}
-          keyExtractor={(item) => item.key.toString()}
+          keyExtractor={(item) => item.uid.toString()}
           renderItem={({ item, index }) => (
             <EmergencyContact
               name={item.name}
               phone={item.phone}
-              id={item.key}
+              avatar={item.avatar}
               deletePressHandler={function () {
-                setDeleteItem(item.key);
+                setDeleteItem(item.uid);
                 setDeleteModal(!deleteModal);
               }}
             ></EmergencyContact>
