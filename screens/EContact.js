@@ -52,8 +52,9 @@ export default function EContact({ navigation }) {
             alert("User not found");
           } else {
             snapshot.docs.forEach((doc) => {
-              // addEContact(doc.id, doc.data());
+              // console.log(doc.data().email);
               addEContact(doc.id);
+              // addEContact(doc.id);
             });
           }
         });
@@ -61,8 +62,8 @@ export default function EContact({ navigation }) {
     }
   };
 
-  const addEContact = async (userId, EContact) => {
-    await firebase
+  const addEContact = (userId) => {
+    firebase
       .firestore()
       .collection("users")
       .doc(currentUser.uid)
@@ -100,8 +101,9 @@ export default function EContact({ navigation }) {
           uidList.push({ ...documentSnapshot.data() });
         });
       });
-    uidList.forEach((object) => {
-      firebase
+
+    uidList.map(async (object) => {
+      await firebase
         .firestore()
         .collection("users")
         .doc(object.userId)
@@ -113,13 +115,12 @@ export default function EContact({ navigation }) {
           });
         });
     });
-
     setContacts(contactList);
   };
 
   useEffect(() => {
     getEContact();
-  });
+  }, []);
 
   const DATA = [
     {
