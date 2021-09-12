@@ -56,6 +56,6 @@ Download expo from app store then scan the barcode inside the link https://expo.
 ![image](https://user-images.githubusercontent.com/31809873/132990029-9dc288ab-d256-49c4-b478-af9ccef9c597.png)
 
 ## Contributor
-Christina Xie
-William Xu
-Hope Guo
+* Christina Xie
+* William Xu
+* Hope Guo
