@@ -22,11 +22,11 @@ export default function EContact({ navigation }) {
   const [deleteItem, setDeleteItem] = React.useState(0);
 
   const handleDelete = () => {
-    if(deleteItem != 0) {
+    if (deleteItem != 0) {
       console.log(deleteItem);
-      setDeleteModal(!deleteModal)
+      setDeleteModal(!deleteModal);
     }
-  }
+  };
 
   const toggleInvite = () => {
     setInviteModal(!inviteModal);
@@ -67,7 +67,6 @@ export default function EContact({ navigation }) {
     });
   }, [navigation]);
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.centerView}>
@@ -101,17 +100,27 @@ export default function EContact({ navigation }) {
       <View>
         <FlatList
           data={DATA}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item, index }) => (
             <EmergencyContact
               name={item.name}
               phone={item.phone}
               id={item.id}
-              deletePressHandler={function() {setDeleteItem(item.id); setDeleteModal(!deleteModal)}}
+              deletePressHandler={function () {
+                setDeleteItem(item.id);
+                setDeleteModal(!deleteModal);
+              }}
             ></EmergencyContact>
           )}
         ></FlatList>
       </View>
-      <DeleteConfirm isVisible={deleteModal} deleteEvent={handleDelete} toggle={() => {setDeleteModal(!deleteModal)}}></DeleteConfirm>
+      <DeleteConfirm
+        isVisible={deleteModal}
+        deleteEvent={handleDelete}
+        toggle={() => {
+          setDeleteModal(!deleteModal);
+        }}
+      ></DeleteConfirm>
     </SafeAreaView>
   );
 }

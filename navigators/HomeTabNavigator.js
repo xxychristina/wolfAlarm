@@ -35,9 +35,6 @@ export default function HomeTabNavigator() {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        // .then((result) => {
-        //   console.log(result);
-        // })
         .catch((error) => {
           alert(error);
         });
@@ -90,10 +87,10 @@ export default function HomeTabNavigator() {
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         setLoggedIn(false);
-        console.log("loggedIn " + loggedIn);
+        // console.log("loggedIn " + loggedIn);
       } else {
         setLoggedIn(true);
-        console.log("loggedIn " + loggedIn);
+        // console.log("loggedIn " + loggedIn);
       }
     });
   });
