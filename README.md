@@ -52,5 +52,5 @@ Download expo from app store then scan the barcode inside the link https://expo.
 
 <!-- USAGE EXAMPLES -->
 ## Design
-**SOS** and **virtual** are currently **unavailable**.
+**SOS** and **virtual Call** are currently **unavailable**.
 ![image](https://user-images.githubusercontent.com/31809873/132990029-9dc288ab-d256-49c4-b478-af9ccef9c597.png)
