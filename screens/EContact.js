@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,11 +15,16 @@ import EmergencyContact from "../components/EmergencyContact";
 import Modal from "react-native-modal";
 import { FlatList } from "react-native-gesture-handler";
 import DeleteConfirm from "../components/DeleteConfirm";
+import firebase from "firebase";
 
 export default function EContact({ navigation }) {
   const [inviteModal, setInviteModal] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState(0);
+  const [inviteEmail, setInviteEmail] = React.useState(null);
+  const [Contacts, setContacts] = React.useState(null);
+
+  const currentUser = firebase.auth().currentUser;
 
   const handleDelete = () => {
     if (deleteItem != 0) {
@@ -32,6 +37,74 @@ export default function EContact({ navigation }) {
     setInviteModal(!inviteModal);
     console.log(inviteModal);
   };
+
+  const Invitehandler = () => {
+    if (currentUser.email === inviteEmail) {
+      alert("Cannot add youself as emergency contact");
+    } else {
+      const userDetails = firebase
+        .firestore()
+        .collection("users")
+        .where("email", "==", inviteEmail)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            alert("User not found");
+          } else {
+            snapshot.docs.forEach((doc) => {
+              addEContact(doc.id, doc.data());
+            });
+          }
+        });
+    }
+  };
+
+  const addEContact = (userId, EContact) => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("Emergency Contacts")
+      .where("id", "==", userId)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(currentUser.uid)
+            .collection("Emergency Contacts")
+            .doc(userId)
+            .set(EContact);
+          alert("User added as emergency contact");
+        } else {
+          alert("You already have this user as emergency contact");
+        }
+      });
+  };
+
+  const getEContact = () => {
+    const contactList = [];
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("Emergency Contacts")
+      .get()
+      .then((collectionSnapshot) => {
+        collectionSnapshot.forEach((documentSnapshot) => {
+          contactList.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+      });
+    setContacts(contactList);
+  };
+
+  useEffect(() => {
+    getEContact();
+  }, []);
 
   const DATA = [
     {
@@ -84,12 +157,11 @@ export default function EContact({ navigation }) {
             <Input
               placeholder="Email"
               leftIcon={<Icon name="envelope" size={30}></Icon>}
-            ></Input>
-            <TouchableOpacity
-              onPress={() => {
-                alert("send");
+              onChangeText={(email) => {
+                setInviteEmail(email);
               }}
-            >
+            ></Input>
+            <TouchableOpacity onPress={Invitehandler}>
               <View style={styles.button}>
                 <Text style={{ textAlign: "center" }}>Invite</Text>
               </View>
@@ -99,15 +171,29 @@ export default function EContact({ navigation }) {
       </View>
       <View>
         <FlatList
-          data={DATA}
-          keyExtractor={(item) => item.id.toString()}
+          // data={DATA}
+          // keyExtractor={(item) => item.id.toString()}
+          // renderItem={({ item, index }) => (
+          //   <EmergencyContact
+          //     name={item.name}
+          //     phone={item.phone}
+          //     id={item.id}
+          //     deletePressHandler={function () {
+          //       setDeleteItem(item.id);
+          //       setDeleteModal(!deleteModal);
+          //     }}
+          //   ></EmergencyContact>
+          // )}
+
+          data={Contacts}
+          keyExtractor={(item) => item.key.toString()}
           renderItem={({ item, index }) => (
             <EmergencyContact
               name={item.name}
               phone={item.phone}
-              id={item.id}
+              id={item.key}
               deletePressHandler={function () {
-                setDeleteItem(item.id);
+                setDeleteItem(item.key);
                 setDeleteModal(!deleteModal);
               }}
             ></EmergencyContact>

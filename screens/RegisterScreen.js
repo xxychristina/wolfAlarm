@@ -37,9 +37,9 @@ export default function RegisterScreen({ navigation }) {
     navigation.navigate("Login");
   };
 
-  const RegisterHandler = (id, name, phone, email, avatar, password) => {
+  const RegisterHandler = (email, password, name, phone, avatar) => {
     if (samePassword) {
-      register(id, name, phone, email, avatar, password);
+      register(email, password, name, phone, avatar);
     } else {
       Alert.alert("Error: Passwords are not the same");
     }
@@ -206,9 +206,9 @@ export default function RegisterScreen({ navigation }) {
                 <TouchableOpacity
                   style={styles.RegisterButton}
                   onPress={() => {
-                    let userId = uuid.v4();
-                    console.log(password);
-                    RegisterHandler(userId, name, phone, email, null, password);
+                    // let userId = uuid.v4();
+                    // console.log(password);
+                    RegisterHandler(email, password, name, null, null);
                   }}
                 >
                   <Text style={[styles.buttonText, { color: "white" }]}>

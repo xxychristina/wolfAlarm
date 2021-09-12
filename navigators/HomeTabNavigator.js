@@ -45,7 +45,7 @@ export default function HomeTabNavigator() {
         .signOut()
         .then(() => console.log("user sign out"));
     },
-    register: (id, name, phone, email, avatar, password) => {
+    register: (email, password, name, phone, avatar) => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -54,7 +54,7 @@ export default function HomeTabNavigator() {
             .firestore()
             .collection("users")
             .doc(firebase.auth().currentUser.uid)
-            .set({ id, name, phone, email, avatar });
+            .set({ name, phone, email, avatar });
         })
         .catch((error) => {
           alert(error);

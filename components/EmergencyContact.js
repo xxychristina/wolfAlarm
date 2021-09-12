@@ -8,16 +8,18 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function EmergencyContact({name, phone, id, deletePressHandler}) {
+export default function EmergencyContact({
+  name,
+  phone,
+  id,
+  deletePressHandler,
+}) {
+  console.log("This is name + " + name);
   return (
     <View style={styles.emergencyContact}>
       <View style={styles.profilePicture}></View>
-      <Text
-        style={styles.emergencyContactName}
-      >{name}</Text>
-      <Text
-        style={styles.emergencyContactNumber}
-      >{phone}</Text>
+      <Text style={styles.emergencyContactName}>{name}</Text>
+      <Text style={styles.emergencyContactNumber}>{phone}</Text>
       <TouchableOpacity
         // TODO: add function
         onPress={deletePressHandler}
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     borderBottomColor: "#778595",
     borderBottomWidth: 2,
-    alignSelf: "center"
+    alignSelf: "center",
   },
 
   emergencyContactName: {
