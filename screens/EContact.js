@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,41 +15,127 @@ import EmergencyContact from "../components/EmergencyContact";
 import Modal from "react-native-modal";
 import { FlatList } from "react-native-gesture-handler";
 import DeleteConfirm from "../components/DeleteConfirm";
+import firebase from "firebase";
 
 export default function EContact({ navigation }) {
   const [inviteModal, setInviteModal] = React.useState(false);
   const [deleteModal, setDeleteModal] = React.useState(false);
-  const [deleteItem, setDeleteItem] = React.useState(0);
+  const [deleteItem, setDeleteItem] = React.useState(null);
+  const [inviteEmail, setInviteEmail] = React.useState(null);
+  const [newContacts, setNewContacts] = React.useState(null);
 
-  const handleDelete = () => {
-    if(deleteItem != 0) {
-      console.log(deleteItem);
-      setDeleteModal(!deleteModal)
-    }
-  }
+  const currentUser = firebase.auth().currentUser;
+
+  const handleDelete = (deleteItem) => {
+    econtacts.delete(deleteItem);
+  };
 
   const toggleInvite = () => {
     setInviteModal(!inviteModal);
     console.log(inviteModal);
   };
 
-  const DATA = [
-    {
-      id: 1,
-      name: "William",
-      phone: "+61452230632",
+  const Invitehandler = () => {
+    if (currentUser.email === inviteEmail) {
+      alert("Cannot add youself as emergency contact");
+    } else {
+      const userDetails = firebase
+        .firestore()
+        .collection("users")
+        .where("email", "==", inviteEmail)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            alert("User not found");
+          } else {
+            snapshot.docs.forEach((doc) => {
+              econtacts.add(doc.id);
+            });
+          }
+        });
+    }
+  };
+
+  const getEContact = async () => {
+    const uidList = [];
+    const contactList = [];
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("Emergency Contacts")
+      .get()
+      .then((collectionSnapshot) => {
+        collectionSnapshot.forEach((documentSnapshot) => {
+          uidList.push({ ...documentSnapshot.data() });
+        });
+      });
+
+    await Promise.all(
+      uidList.map(async (object) => {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(object.userId)
+          .get()
+          .then((snapshot) => {
+            contactList.push({
+              ...snapshot.data(),
+              uid: object.userId,
+            });
+          });
+      })
+    );
+    setNewContacts(contactList);
+  };
+
+  useEffect(() => {
+    getEContact();
+  }, []);
+
+  const Contacts = React.useMemo(() => newContacts, [newContacts]);
+  const econtacts = React.useMemo(() => ({
+    add: async (userId) => {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("Emergency Contacts")
+        .where("id", "==", userId)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("Emergency Contacts")
+              .doc(userId)
+              .set({ userId });
+            alert("User added as emergency contact");
+          } else {
+            alert("You already have this user as emergency contact");
+          }
+        });
+      getEContact();
     },
-    {
-      id: 2,
-      name: "Chris",
-      phone: "+61452230632",
+    delete: async (deleteItem) => {
+      if (deleteItem != null) {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(currentUser.uid)
+          .collection("Emergency Contacts")
+          .doc(deleteItem)
+          .delete()
+          .then(() => {
+            console.log("delete");
+          });
+        setDeleteModal(!deleteModal);
+        getEContact();
+      }
     },
-    {
-      id: 3,
-      name: "Chris",
-      phone: "+61452230632",
-    },
-  ];
+  }));
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,7 +152,6 @@ export default function EContact({ navigation }) {
       ),
     });
   }, [navigation]);
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,12 +170,11 @@ export default function EContact({ navigation }) {
             <Input
               placeholder="Email"
               leftIcon={<Icon name="envelope" size={30}></Icon>}
-            ></Input>
-            <TouchableOpacity
-              onPress={() => {
-                alert("send");
+              onChangeText={(email) => {
+                setInviteEmail(email);
               }}
-            >
+            ></Input>
+            <TouchableOpacity onPress={Invitehandler}>
               <View style={styles.button}>
                 <Text style={{ textAlign: "center" }}>Invite</Text>
               </View>
@@ -100,18 +184,43 @@ export default function EContact({ navigation }) {
       </View>
       <View>
         <FlatList
-          data={DATA}
+          data={newContacts}
+          keyExtractor={(item) => item.uid.toString()}
           renderItem={({ item, index }) => (
             <EmergencyContact
               name={item.name}
               phone={item.phone}
-              id={item.id}
-              deletePressHandler={function() {setDeleteItem(item.id); setDeleteModal(!deleteModal)}}
+              avatar={item.avatar}
+              deletePressHandler={function () {
+                setDeleteItem(item.uid);
+                setDeleteModal(!deleteModal);
+              }}
             ></EmergencyContact>
           )}
         ></FlatList>
       </View>
-      <DeleteConfirm isVisible={deleteModal} deleteEvent={handleDelete} toggle={() => {setDeleteModal(!deleteModal)}}></DeleteConfirm>
+      <Modal isVisible={deleteModal}>
+        <View style={styles.deleteModalContainer}>
+          <View>
+            <Button
+              type="clear"
+              title="Cancle"
+              onPress={() => {
+                setDeleteModal(!deleteModal);
+              }}
+            ></Button>
+          </View>
+          <View>
+            <Button
+              type="clear"
+              title="Delete"
+              onPress={() => {
+                handleDelete(deleteItem);
+              }}
+            ></Button>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -141,6 +250,19 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 20,
+  },
+  deleteModalContainer: {
+    backgroundColor: "#ffffff",
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: "#000",
+    borderStyle: "solid",
+    flexDirection: "row",
+    width: "100%",
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    justifyContent: "space-around",
+    alignItems: "flex-end",
   },
   centerText: {
     // textAlign: "center",

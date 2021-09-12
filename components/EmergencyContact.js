@@ -5,19 +5,29 @@ import {
   View,
   Text,
   TextInput,
+  Image,
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function EmergencyContact({name, phone, id, deletePressHandler}) {
+export default function EmergencyContact({
+  name,
+  phone,
+  avatar,
+  deletePressHandler,
+}) {
   return (
     <View style={styles.emergencyContact}>
-      <View style={styles.profilePicture}></View>
-      <Text
-        style={styles.emergencyContactName}
-      >{name}</Text>
-      <Text
-        style={styles.emergencyContactNumber}
-      >{phone}</Text>
+      {avatar === null ? (
+        <View style={styles.profilePictureEmpty} />
+      ) : (
+        <Image source={{ uri: avatar }} style={styles.profilePicture} />
+      )}
+      <Text style={styles.emergencyContactName}>{name}</Text>
+      {phone === null ? (
+        <Text style={styles.emergencyContactNumber}>No phone</Text>
+      ) : (
+        <Text style={styles.emergencyContactNumber}>{phone}</Text>
+      )}
       <TouchableOpacity
         // TODO: add function
         onPress={deletePressHandler}
@@ -35,11 +45,18 @@ export default function EmergencyContact({name, phone, id, deletePressHandler}) 
 }
 
 const styles = StyleSheet.create({
-  profilePicture: {
+  profilePictureEmpty: {
     width: 50,
     height: 50,
     borderRadius: 50 / 2,
     backgroundColor: "#C4C4C4",
+    marginBottom: 5,
+  },
+
+  profilePicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
     marginBottom: 5,
   },
 
@@ -51,7 +68,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     borderBottomColor: "#778595",
     borderBottomWidth: 2,
-    alignSelf: "center"
+    alignSelf: "center",
   },
 
   emergencyContactName: {
